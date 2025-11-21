@@ -93,7 +93,7 @@ class AuthServiceTest extends BaseUnitTest {
         void loginSuccess() {
             // Given
             Authentication authentication = mock(Authentication.class);
-            UserPrincipal userPrincipal = new UserPrincipal(testUser);
+            UserPrincipal userPrincipal = UserPrincipal.create(testUser);
             when(authentication.getPrincipal()).thenReturn(userPrincipal);
 
             when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
@@ -129,7 +129,7 @@ class AuthServiceTest extends BaseUnitTest {
             // Given
             LocalDateTime beforeLogin = LocalDateTime.now().minusSeconds(1);
             Authentication authentication = mock(Authentication.class);
-            UserPrincipal userPrincipal = new UserPrincipal(testUser);
+            UserPrincipal userPrincipal = UserPrincipal.create(testUser);
             when(authentication.getPrincipal()).thenReturn(userPrincipal);
 
             when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
@@ -187,7 +187,7 @@ class AuthServiceTest extends BaseUnitTest {
         void shouldCreateCorrectAuthenticationToken() {
             // Given
             Authentication authentication = mock(Authentication.class);
-            UserPrincipal userPrincipal = new UserPrincipal(testUser);
+            UserPrincipal userPrincipal = UserPrincipal.create(testUser);
             when(authentication.getPrincipal()).thenReturn(userPrincipal);
 
             when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))

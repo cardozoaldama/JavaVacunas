@@ -60,7 +60,7 @@ class VaccineServiceTest extends BaseUnitTest {
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getName()).isEqualTo("BCG");
         assertThat(result.getDiseasePrevented()).isEqualTo("Tuberculosis");
-        assertThat(result.isActive()).isTrue();
+        assertThat(result.getIsActive()).isTrue();
     }
 
     @Test
@@ -111,7 +111,7 @@ class VaccineServiceTest extends BaseUnitTest {
         List<VaccineDto> result = vaccineService.getAllActiveVaccines();
 
         assertThat(result).hasSize(2);
-        assertThat(result).allMatch(VaccineDto::isActive);
+        assertThat(result).allMatch(VaccineDto::getIsActive);
     }
 
     @Test
@@ -141,6 +141,6 @@ class VaccineServiceTest extends BaseUnitTest {
         assertThat(result.getMinimumAgeMonths()).isEqualTo(testVaccine.getMinimumAgeMonths());
         assertThat(result.getStorageTemperatureMin()).isEqualByComparingTo(testVaccine.getStorageTemperatureMin());
         assertThat(result.getStorageTemperatureMax()).isEqualByComparingTo(testVaccine.getStorageTemperatureMax());
-        assertThat(result.isActive()).isTrue();
+        assertThat(result.getIsActive()).isTrue();
     }
 }
