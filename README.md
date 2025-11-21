@@ -1,5 +1,17 @@
 # JavaVacunas
 
+[![CI/CD Pipeline](https://github.com/cardozoaldama/JavaVacunas/actions/workflows/ci.yml/badge.svg)](https://github.com/cardozoaldama/JavaVacunas/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=cardozoaldama_JavaVacunas&metric=alert_status)](https://sonarcloud.io/dashboard?id=cardozoaldama_JavaVacunas)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=cardozoaldama_JavaVacunas&metric=coverage)](https://sonarcloud.io/dashboard?id=cardozoaldama_JavaVacunas)
+[![codecov](https://codecov.io/gh/cardozoaldama/JavaVacunas/branch/main/graph/badge.svg)](https://codecov.io/gh/cardozoaldama/JavaVacunas)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=cardozoaldama_JavaVacunas&metric=bugs)](https://sonarcloud.io/dashboard?id=cardozoaldama_JavaVacunas)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=cardozoaldama_JavaVacunas&metric=security_rating)](https://sonarcloud.io/dashboard?id=cardozoaldama_JavaVacunas)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=cardozoaldama_JavaVacunas&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=cardozoaldama_JavaVacunas)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://openjdk.java.net/projects/jdk/17/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-green.svg)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
+
 A modern vaccination management system for children in Paraguay, following the PAI (Expanded Program on Immunization) schedule established by the Ministry of Public Health and Social Welfare.
 
 ## Overview
