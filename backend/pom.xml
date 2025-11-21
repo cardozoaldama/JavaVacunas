@@ -22,7 +22,7 @@
         <java.version>17</java.version>
         <oracle.version>23.3.0.23.09</oracle.version>
         <jjwt.version>0.12.3</jjwt.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <springdoc.version>2.3.0</springdoc.version>
         <testcontainers.version>1.19.3</testcontainers.version>
         <jacoco.version>0.8.11</jacoco.version>
