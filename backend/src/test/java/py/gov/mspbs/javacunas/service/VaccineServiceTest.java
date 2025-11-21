@@ -26,7 +26,7 @@ class VaccineServiceTest extends BaseUnitTest {
     @Mock
     private VaccineRepository vaccineRepository;
 
-    @Inject Mocks
+    @InjectMocks
     private VaccineService vaccineService;
 
     private Vaccine testVaccine;
