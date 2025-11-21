@@ -24,7 +24,7 @@
         <jjwt.version>0.12.3</jjwt.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <springdoc.version>2.3.0</springdoc.version>
-        <testcontainers.version>1.19.3</testcontainers.version>
+        <testcontainers.version>1.21.3</testcontainers.version>
         <jacoco.version>0.8.11</jacoco.version>
 
         <!-- SonarCloud -->
