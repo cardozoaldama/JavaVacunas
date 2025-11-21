@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability
+    url: https://github.com/cardozoaldama/JavaVacunas/security/advisories/new
+    about: Please report security vulnerabilities privately through GitHub Security Advisories
+  - name: Contributing Guide
+    url: https://github.com/cardozoaldama/JavaVacunas/blob/main/.github/CONTRIBUTING.md
+    about: Read our contributing guidelines before submitting issues or pull requests

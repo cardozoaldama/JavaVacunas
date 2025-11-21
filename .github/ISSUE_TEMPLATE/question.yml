@@ -1,0 +1,74 @@
+name: Question
+description: Ask a question about JavaVacunas
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question about JavaVacunas? We're here to help. Please provide as much context as possible.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What would you like to know?
+      placeholder: Ask your question here...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: What is your question about?
+      options:
+        - Installation and Setup
+        - Configuration
+        - Usage
+        - Development
+        - Deployment
+        - Security
+        - Performance
+        - Best Practices
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide any relevant context or background information.
+      placeholder: |
+        - What are you trying to accomplish?
+        - What have you already tried?
+        - Any relevant documentation you've reviewed?
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment (if relevant)
+      description: Provide environment details if relevant to your question.
+      placeholder: |
+        - OS: [e.g., Ubuntu 22.04]
+        - Java Version: [e.g., OpenJDK 17]
+        - Node Version: [e.g., 18.17.0]
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any other information that might help us answer your question.
+      placeholder: Any additional context...
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm the following before submitting.
+      options:
+        - label: I have checked the README and documentation
+          required: true
+        - label: I have searched existing issues for similar questions
+          required: true
