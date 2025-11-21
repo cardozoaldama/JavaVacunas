@@ -119,19 +119,72 @@ The system includes the complete PAI (Programa Ampliado de Inmunizaciones) sched
 
 ## Development
 
-### Running Tests
+### Testing
 
-Backend:
+JavaVacunas maintains comprehensive test coverage with a goal of 90%+ for production readiness.
+
+#### Test Infrastructure
+
+- **Unit Tests**: JUnit 5, Mockito, AssertJ
+- **Integration Tests**: TestContainers with Oracle 23c XE
+- **Code Coverage**: JaCoCo
+- **CI/CD**: GitHub Actions
+- **Code Quality**: SonarCloud
+
+#### Running Tests
+
+**Unit Tests** (fast, in-memory H2):
 ```bash
 cd backend
 mvn test
 ```
 
-Frontend:
+**Integration Tests** (with TestContainers Oracle):
 ```bash
-cd frontend
-npm test
+cd backend
+mvn verify
 ```
+
+**All Tests with Coverage**:
+```bash
+cd backend
+mvn clean verify jacoco:report
+```
+
+View coverage report: `backend/target/site/jacoco/index.html`
+
+**Coverage Thresholds**:
+- Line Coverage: 90%
+- Branch Coverage: 85%
+
+#### Test Structure
+
+```
+backend/src/test/java/
+├── py/gov/mspbs/javacunas/
+│   ├── BaseUnitTest.java           # Base for unit tests
+│   ├── BaseIT.java                 # Base for integration tests
+│   ├── service/                    # Service layer tests
+│   ├── controller/                 # API endpoint tests
+│   ├── security/                   # Security tests
+│   └── config/
+│       └── TestContainersConfiguration.java
+```
+
+#### Test Naming Conventions
+
+- Unit tests: `*Test.java` (e.g., `AuthServiceTest.java`)
+- Integration tests: `*IT.java` (e.g., `ChildRepositoryIT.java`)
+
+#### Continuous Integration
+
+Every push and pull request triggers:
+- Build compilation
+- Unit tests
+- Integration tests
+- Code coverage analysis
+- SonarCloud quality scan
+- Security vulnerability checks
 
 ### Database Migrations
 

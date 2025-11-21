@@ -215,11 +215,135 @@ Enhancement suggestions are welcome. Please provide:
 
 ## Testing
 
-- Write unit tests for business logic
-- Write integration tests for API endpoints
-- Test database migrations on a clean database
-- Test UI changes in multiple browsers
-- Verify responsive design on different screen sizes
+JavaVacunas follows Test-Driven Development (TDD) principles with a target of 90%+ code coverage.
+
+### Testing Strategy
+
+**Unit Tests** (`*Test.java`):
+- Test service layer business logic in isolation
+- Use Mockito to mock dependencies
+- Fast execution with H2 in-memory database
+- Extend `BaseUnitTest` class
+- Focus on edge cases, error handling, and validation
+
+**Integration Tests** (`*IT.java`):
+- Test repository layer with real Oracle database
+- Use TestContainers for database provisioning
+- Test database constraints, triggers, and migrations
+- Extend `BaseIT` class
+- Slower but ensure Oracle-specific behavior works
+
+**API Tests**:
+- Test REST endpoints with MockMvc
+- Verify HTTP status codes and response structure
+- Test authentication and authorization
+- Validate request/response JSON
+- Test error scenarios
+
+### Writing Unit Tests
+
+Example structure:
+```java
+@DisplayName("ServiceName Tests")
+class ServiceNameTest extends BaseUnitTest {
+
+    @Mock
+    private DependencyRepository repository;
+
+    @InjectMocks
+    private ServiceName service;
+
+    @Nested
+    @DisplayName("Method Name Tests")
+    class MethodNameTests {
+
+        @Test
+        @DisplayName("Should do something when condition")
+        void shouldDoSomethingWhenCondition() {
+            // Given
+            when(repository.method()).thenReturn(value);
+
+            // When
+            Result result = service.method();
+
+            // Then
+            assertThat(result).isNotNull();
+            verify(repository).method();
+        }
+    }
+}
+```
+
+### Writing Integration Tests
+
+Example structure:
+```java
+@DisplayName("RepositoryName Integration Tests")
+class RepositoryNameIT extends BaseIT {
+
+    @Autowired
+    private RepositoryName repository;
+
+    @Test
+    @DisplayName("Should find entity by criteria")
+    void shouldFindEntityByCriteria() {
+        // Given - setup test data
+        Entity entity = createTestEntity();
+        repository.save(entity);
+
+        // When
+        Optional<Entity> result = repository.findByCriteria(criteria);
+
+        // Then
+        assertThat(result).isPresent();
+    }
+}
+```
+
+### Test Best Practices
+
+1. **Given-When-Then Pattern**: Structure tests clearly
+2. **Descriptive Names**: Use `@DisplayName` with clear descriptions
+3. **One Assertion Focus**: Test one thing at a time
+4. **Mock External Dependencies**: Don't call real APIs or databases in unit tests
+5. **Test Edge Cases**: Null values, empty lists, boundary conditions
+6. **Test Error Scenarios**: Exceptions, validation failures, business rule violations
+7. **Verify Interactions**: Use `verify()` to ensure mocks were called correctly
+8. **Clean Test Data**: Integration tests clean up after themselves (see `BaseIT.cleanUp()`)
+
+### Running Tests Locally
+
+Before pushing code:
+
+```bash
+# Run all tests with coverage
+cd backend
+mvn clean verify jacoco:report
+
+# View coverage report
+open target/site/jacoco/index.html
+```
+
+Ensure coverage meets thresholds:
+- Line coverage: >= 90%
+- Branch coverage: >= 85%
+
+### Test Coverage Requirements
+
+All contributions must maintain or improve code coverage:
+- New services: 90%+ coverage required
+- New controllers: 90%+ coverage required
+- Bug fixes: Add regression tests
+- New features: Tests before implementation (TDD)
+
+### CI/CD Test Execution
+
+GitHub Actions automatically runs:
+1. Unit tests on every push
+2. Integration tests on every push
+3. Coverage analysis
+4. SonarCloud quality scan
+5. Fails build if coverage drops below 90%
 
 ## Questions?
 

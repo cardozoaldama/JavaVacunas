@@ -1,0 +1,91 @@
+version: 2
+updates:
+  # Backend - Maven dependencies
+  - package-ecosystem: "maven"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "cardozoaldama"
+    labels:
+      - "dependencies"
+      - "backend"
+    commit-message:
+      prefix: "build(deps)"
+      include: "scope"
+
+  # Frontend - npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "cardozoaldama"
+    labels:
+      - "dependencies"
+      - "frontend"
+    commit-message:
+      prefix: "build(deps)"
+      include: "scope"
+    ignore:
+      # Ignore major version updates for React (require manual review)
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "cardozoaldama"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+  # Docker
+  - package-ecosystem: "docker"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "cardozoaldama"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "build(deps)"
+      include: "scope"
+
+  - package-ecosystem: "docker"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "cardozoaldama"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "build(deps)"
+      include: "scope"
