@@ -80,13 +80,55 @@ git clone <repository-url>
 cd JavaVacunas
 ```
 
-### 2. Start the Database
+### 2. Configure Environment Variables
+
+Create a `.env` file in the project root by copying the example file:
+
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file and update the values according to your environment:
+
+```bash
+# Database Configuration
+ORACLE_PWD=YourSecureOraclePassword
+ORACLE_CHARACTERSET=AL32UTF8
+
+# Backend Database Connection
+SPRING_DATASOURCE_URL=jdbc:oracle:thin:@oracle-db:1521/XEPDB1
+SPRING_DATASOURCE_USERNAME=JAVACUNAS
+SPRING_DATASOURCE_PASSWORD=YourSecureDatabasePassword
+
+# JWT Configuration (IMPORTANT: Change this in production!)
+JWT_SECRET=YourVerySecureJWTSecretKeyMinimum256BitsForHS256
+
+# Spring Profile
+SPRING_PROFILES_ACTIVE=docker
+
+# Frontend Configuration
+VITE_API_BASE_URL=http://localhost:8080/api/v1
+
+# Port Configuration (optional, defaults shown)
+ORACLE_PORT=1521
+ORACLE_EM_PORT=5500
+BACKEND_PORT=8080
+FRONTEND_PORT=5173
+```
+
+**Important Security Notes:**
+- Never commit the `.env` file to version control
+- Change default passwords in production environments
+- Use a strong, unique JWT secret (minimum 256 bits for HS256)
+- The `.env` file is already included in `.gitignore`
+
+### 3. Start the Database
 
 ```bash
 podman-compose up -d
 ```
 
-### 3. Run the Backend
+### 4. Run the Backend
 
 ```bash
 cd backend
@@ -95,7 +137,7 @@ mvn spring-boot:run
 
 The API will be available at `http://localhost:8080`
 
-### 4. Run the Frontend
+### 5. Run the Frontend
 
 ```bash
 cd frontend

@@ -5,17 +5,17 @@ services:
     image: container-registry.oracle.com/database/express:23.5.0.0-xfree
     container_name: javacunas-oracle
     environment:
-      - ORACLE_PWD=OraclePassword123
-      - ORACLE_CHARACTERSET=AL32UTF8
+      - ORACLE_PWD=${ORACLE_PWD}
+      - ORACLE_CHARACTERSET=${ORACLE_CHARACTERSET}
     ports:
-      - "1521:1521"
-      - "5500:5500"
+      - "${ORACLE_PORT:-1521}:1521"
+      - "${ORACLE_EM_PORT:-5500}:5500"
     volumes:
       - oracle-data:/opt/oracle/oradata
       - ./docker/oracle/init:/opt/oracle/scripts/startup
     shm_size: 1gb
     healthcheck:
-      test: ["CMD", "sqlplus", "-L", "sys/OraclePassword123@//localhost:1521/XEPDB1 as sysdba", "@healthcheck.sql"]
+      test: ["CMD", "sqlplus", "-L", "sys/${ORACLE_PWD}@//localhost:1521/XEPDB1 as sysdba", "@healthcheck.sql"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -29,13 +29,13 @@ services:
       dockerfile: Dockerfile
     container_name: javacunas-backend
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:oracle:thin:@oracle-db:1521/XEPDB1
-      - SPRING_DATASOURCE_USERNAME=JAVACUNAS
-      - SPRING_DATASOURCE_PASSWORD=JavaCunas123
-      - JWT_SECRET=YourSuperSecretJWTKeyChangeThisInProduction
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
-      - "8080:8080"
+      - "${BACKEND_PORT:-8080}:8080"
     depends_on:
       oracle-db:
         condition: service_healthy
@@ -49,9 +49,9 @@ services:
       dockerfile: Dockerfile
     container_name: javacunas-frontend
     environment:
-      - VITE_API_BASE_URL=http://localhost:8080/api/v1
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL}
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT:-5173}:5173"
     depends_on:
       - backend
     networks:
