@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@oracle-db:1521/XEPDB1
+
+logging:
+  level:
+    root: INFO
+    py.gov.mspbs.javacunas: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
