@@ -10,6 +10,10 @@ jobs:
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -73,11 +77,6 @@ jobs:
           name: codecov-javacunas
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Check code coverage
-        working-directory: ./backend
-        run: |
-          mvn jacoco:check || echo "Coverage check failed - adjust thresholds as needed"
 
       - name: Publish test results
         uses: EnricoMi/publish-unit-test-result-action@v2
