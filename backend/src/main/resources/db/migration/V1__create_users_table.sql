@@ -16,9 +16,7 @@ CREATE TABLE users (
     CONSTRAINT chk_users_is_active CHECK (is_active IN ('Y', 'N'))
 );
 
--- Create index for faster lookups
-CREATE INDEX idx_users_username ON users(username);
-CREATE INDEX idx_users_email ON users(email);
+-- Create index for faster lookups on role (username and email already indexed via UNIQUE constraints)
 CREATE INDEX idx_users_role ON users(role);
 
 -- Add comment

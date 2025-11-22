@@ -44,8 +44,38 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     /**
      * Find children by guardian id.
      */
-    @Query("SELECT c FROM Child c JOIN child_guardians cg ON c.id = cg.child_id " +
-           "WHERE cg.guardian_id = :guardianId AND c.deletedAt IS NULL")
+    @Query("SELECT c FROM Child c JOIN c.guardians g WHERE g.id = :guardianId AND c.deletedAt IS NULL")
     List<Child> findByGuardianId(@Param("guardianId") Long guardianId);
+
+    /**
+     * Find children by guardian document number.
+     */
+    @Query("SELECT c FROM Child c JOIN c.guardians g WHERE g.documentNumber = :documentNumber AND c.deletedAt IS NULL")
+    List<Child> findByGuardianDocumentNumber(@Param("documentNumber") String documentNumber);
+
+    /**
+     * Find active children with their guardians eagerly loaded.
+     * Useful for avoiding N+1 queries when you need both child and guardian data.
+     */
+    @Query("SELECT DISTINCT c FROM Child c LEFT JOIN FETCH c.guardians WHERE c.deletedAt IS NULL")
+    List<Child> findAllActiveWithGuardians();
+
+    /**
+     * Find a specific child with guardians eagerly loaded.
+     */
+    @Query("SELECT c FROM Child c LEFT JOIN FETCH c.guardians WHERE c.id = :childId AND c.deletedAt IS NULL")
+    Optional<Child> findByIdWithGuardians(@Param("childId") Long childId);
+
+    /**
+     * Find children who have no guardians assigned.
+     */
+    @Query("SELECT c FROM Child c WHERE c.guardians IS EMPTY AND c.deletedAt IS NULL")
+    List<Child> findChildrenWithoutGuardians();
+
+    /**
+     * Count guardians for a specific child.
+     */
+    @Query("SELECT COUNT(g) FROM Child c JOIN c.guardians g WHERE c.id = :childId AND c.deletedAt IS NULL")
+    Long countGuardiansByChildId(@Param("childId") Long childId);
 
 }

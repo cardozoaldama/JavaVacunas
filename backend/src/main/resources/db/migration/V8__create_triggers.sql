@@ -124,6 +124,18 @@ EXCEPTION
 END;
 /
 
+-- Trigger to auto-expire inventory before insert/update
+CREATE OR REPLACE TRIGGER trg_inventory_expire_check
+BEFORE INSERT OR UPDATE ON vaccine_inventory
+FOR EACH ROW
+BEGIN
+    -- Update status to EXPIRED if past expiration date
+    IF :NEW.expiration_date < SYSDATE AND :NEW.status = 'AVAILABLE' THEN
+        :NEW.status := 'EXPIRED';
+    END IF;
+END;
+/
+
 -- Trigger to alert on low inventory or expiring vaccines
 CREATE OR REPLACE TRIGGER trg_inventory_alerts
 AFTER INSERT OR UPDATE ON vaccine_inventory
@@ -183,11 +195,6 @@ BEGIN
         FROM users
         WHERE role IN ('DOCTOR', 'NURSE') AND is_active = 'Y'
         AND ROWNUM = 1;
-    END IF;
-
-    -- Update status to EXPIRED if past expiration date
-    IF :NEW.expiration_date < SYSDATE AND :NEW.status = 'AVAILABLE' THEN
-        :NEW.status := 'EXPIRED';
     END IF;
 EXCEPTION
     WHEN OTHERS THEN
