@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Entity representing children/infants in the system.
@@ -58,6 +60,14 @@ public class Child {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "child_guardians",
+        joinColumns = @JoinColumn(name = "child_id"),
+        inverseJoinColumns = @JoinColumn(name = "guardian_id")
+    )
+    private Set<Guardian> guardians = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
