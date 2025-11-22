@@ -1,0 +1,29 @@
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.OracleDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+
+security:
+  jwt:
+    secret: test-secret-key-for-jwt-token-signing-must-be-at-least-256-bits-long
+    expiration: 86400000
+
+logging:
+  level:
+    py.gov.mspbs.javacunas: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.testcontainers: INFO
