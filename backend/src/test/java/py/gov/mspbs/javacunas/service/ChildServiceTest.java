@@ -339,6 +339,55 @@ class ChildServiceTest extends BaseUnitTest {
     }
 
     @Nested
+    @DisplayName("Get Children By Guardian Tests")
+    class GetChildrenByGuardianTests {
+
+        @Test
+        @DisplayName("Should get children by guardian ID")
+        void shouldGetChildrenByGuardianId() {
+            // Given
+            Child child2 = Child.builder()
+                    .id(2L)
+                    .firstName("Ana")
+                    .lastName("Pérez")
+                    .documentNumber("222333444")
+                    .dateOfBirth(LocalDate.of(2022, 5, 10))
+                    .gender(Gender.F)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+
+            when(childRepository.findByGuardianId(1L)).thenReturn(Arrays.asList(testChild, child2));
+
+            // When
+            List<ChildDto> result = childService.getChildrenByGuardianId(1L);
+
+            // Then
+            assertThat(result).hasSize(2);
+            assertThat(result.get(0).getId()).isEqualTo(1L);
+            assertThat(result.get(0).getFirstName()).isEqualTo("Juan");
+            assertThat(result.get(1).getId()).isEqualTo(2L);
+            assertThat(result.get(1).getFirstName()).isEqualTo("Ana");
+
+            verify(childRepository).findByGuardianId(1L);
+        }
+
+        @Test
+        @DisplayName("Should return empty list when guardian has no children")
+        void shouldReturnEmptyListWhenGuardianHasNoChildren() {
+            // Given
+            when(childRepository.findByGuardianId(999L)).thenReturn(List.of());
+
+            // When
+            List<ChildDto> result = childService.getChildrenByGuardianId(999L);
+
+            // Then
+            assertThat(result).isEmpty();
+            verify(childRepository).findByGuardianId(999L);
+        }
+    }
+
+    @Nested
     @DisplayName("Update Child Tests")
     class UpdateChildTests {
 
