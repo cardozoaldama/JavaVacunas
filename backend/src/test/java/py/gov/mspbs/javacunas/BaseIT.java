@@ -17,7 +17,7 @@ import py.gov.mspbs.javacunas.config.TestContainersConfiguration;
  */
 @SpringBootTest
 @Import(TestContainersConfiguration.class)
-@ActiveProfiles("test")
+@ActiveProfiles("integration-test")
 @Transactional
 public abstract class BaseIT {
 
