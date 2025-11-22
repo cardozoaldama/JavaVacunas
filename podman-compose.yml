@@ -15,11 +15,11 @@ services:
       - ./docker/oracle/init:/opt/oracle/scripts/startup
     shm_size: 1gb
     healthcheck:
-      test: ["CMD", "sqlplus", "-L", "sys/${ORACLE_PWD}@//localhost:1521/XEPDB1 as sysdba", "@healthcheck.sql"]
+      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -S JAVACUNAS/JavaCunas123@//localhost:1521/XEPDB1 | grep -q '1' || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 5
-      start_period: 120s
+      retries: 10
+      start_period: 180s
     networks:
       - javacunas-network
 

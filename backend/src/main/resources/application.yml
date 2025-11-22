@@ -10,9 +10,11 @@ spring:
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
-      connection-timeout: 30000
+      connection-timeout: 60000
       idle-timeout: 600000
       max-lifetime: 1800000
+      initialization-fail-timeout: 60000
+      connection-init-sql: SELECT 1 FROM DUAL
 
   jpa:
     database-platform: org.hibernate.dialect.Oracle12cDialect

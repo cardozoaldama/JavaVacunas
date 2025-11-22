@@ -12,8 +12,7 @@ CREATE TABLE children (
     created_at TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
     deleted_at TIMESTAMP,
-    CONSTRAINT chk_children_gender CHECK (gender IN ('M', 'F', 'O')),
-    CONSTRAINT chk_children_birth_date CHECK (date_of_birth <= SYSDATE)
+    CONSTRAINT chk_children_gender CHECK (gender IN ('M', 'F', 'O'))
 );
 
 -- Create guardians table
