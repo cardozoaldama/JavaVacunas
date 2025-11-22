@@ -24,7 +24,6 @@ public class TestContainersConfiguration {
     @ServiceConnection
     OracleContainer oracleContainer() {
         return new OracleContainer(DockerImageName.parse("gvenzl/oracle-xe:21-slim-faststart"))
-                .withDatabaseName("XEPDB1")
                 .withUsername("javacunas_test")
                 .withPassword("test_password")
                 .withReuse(true);
