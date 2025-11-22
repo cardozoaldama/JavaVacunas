@@ -1,4 +1,6 @@
-version: '3.8'
+# Docker Compose configuration for JavaVacunas
+# Compatible with Docker Compose v2+ and Podman Compose
+# Note: Docker Compose v2 properly respects service dependencies and health checks
 
 services:
   oracle-db:
@@ -39,6 +41,12 @@ services:
     depends_on:
       oracle-db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
     networks:
       - javacunas-network
     restart: unless-stopped
@@ -51,9 +59,16 @@ services:
     environment:
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
     ports:
-      - "${FRONTEND_PORT:-5173}:5173"
+      - "${FRONTEND_PORT:-5173}:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
     networks:
       - javacunas-network
     restart: unless-stopped
