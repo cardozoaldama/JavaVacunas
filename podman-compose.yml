@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   oracle-db:
-    image: container-registry.oracle.com/database/express:23.5.0.0-xfree
+    image: container-registry.oracle.com/database/express:21.3.0-xe
     container_name: javacunas-oracle
     environment:
       - ORACLE_PWD=${ORACLE_PWD}
