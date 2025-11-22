@@ -55,6 +55,7 @@ class VaccineInventoryServiceIT extends BaseIT {
                 .description("Hepatitis B vaccine")
                 .manufacturer("Pharma Corp")
                 .diseasePrevented("Hepatitis B")
+                .doseCount(3)
                 .isActive('Y')
                 .build();
         testVaccine = vaccineRepository.save(testVaccine);

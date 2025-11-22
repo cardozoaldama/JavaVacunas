@@ -43,6 +43,7 @@ class VaccinationScheduleServiceIT extends BaseIT {
                 .description("Tuberculosis vaccine")
                 .manufacturer("Test Manufacturer")
                 .diseasePrevented("Tuberculosis")
+                .doseCount(1)
                 .isActive('Y')
                 .build();
         bcgVaccine = vaccineRepository.save(bcgVaccine);
@@ -52,6 +53,7 @@ class VaccinationScheduleServiceIT extends BaseIT {
                 .description("Hepatitis B vaccine")
                 .manufacturer("Test Manufacturer")
                 .diseasePrevented("Hepatitis B")
+                .doseCount(3)
                 .isActive('Y')
                 .build();
         hepatitisBVaccine = vaccineRepository.save(hepatitisBVaccine);
@@ -61,6 +63,7 @@ class VaccinationScheduleServiceIT extends BaseIT {
                 .description("Diphtheria, Tetanus, Pertussis vaccine")
                 .manufacturer("Test Manufacturer")
                 .diseasePrevented("Diphtheria, Tetanus, Pertussis")
+                .doseCount(5)
                 .isActive('Y')
                 .build();
         dtpVaccine = vaccineRepository.save(dtpVaccine);
@@ -178,6 +181,7 @@ class VaccinationScheduleServiceIT extends BaseIT {
                         .description("Test")
                         .manufacturer("Test")
                         .diseasePrevented("Test")
+                        .doseCount(1)
                         .isActive('Y')
                         .build()
         );

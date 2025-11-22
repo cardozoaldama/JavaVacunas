@@ -69,6 +69,7 @@ class VaccinationRecordServiceIT extends BaseIT {
                 .description("Tuberculosis vaccine")
                 .manufacturer("Test Manufacturer")
                 .diseasePrevented("Tuberculosis")
+                .doseCount(1)
                 .isActive('Y')
                 .build();
         testVaccine = vaccineRepository.save(testVaccine);
