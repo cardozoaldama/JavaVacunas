@@ -42,11 +42,9 @@ CREATE TABLE child_guardians (
     CONSTRAINT chk_cg_is_primary CHECK (is_primary IN ('Y', 'N'))
 );
 
--- Indexes for performance
+-- Indexes for performance (document_number columns already indexed via UNIQUE constraints)
 CREATE INDEX idx_children_dob ON children(date_of_birth);
-CREATE INDEX idx_children_document ON children(document_number);
 CREATE INDEX idx_children_deleted ON children(deleted_at);
-CREATE INDEX idx_guardians_document ON guardians(document_number);
 CREATE INDEX idx_guardians_user ON guardians(user_id);
 
 -- Comments
