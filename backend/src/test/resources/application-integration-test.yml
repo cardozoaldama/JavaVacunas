@@ -11,7 +11,7 @@ spring:
 
   flyway:
     enabled: true
-    locations: classpath:db/migration
+    locations: classpath:db/migration,classpath:db/test-migration
     baseline-on-migrate: true
     baseline-version: 0
     # Override schemas from main application.yml - use TestContainers user schema
