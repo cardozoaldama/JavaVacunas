@@ -14,7 +14,9 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     baseline-version: 0
-    # Override schemas from main application.yml - don't try to create schemas
+    # Override schemas from main application.yml - use TestContainers user schema
+    schemas: JAVACUNAS_TEST
+    default-schema: JAVACUNAS_TEST
     create-schemas: false
     clean-disabled: false
     validate-on-migrate: false
