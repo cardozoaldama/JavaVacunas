@@ -67,6 +67,7 @@ public class Child {
         joinColumns = @JoinColumn(name = "child_id"),
         inverseJoinColumns = @JoinColumn(name = "guardian_id")
     )
+    @Builder.Default
     private Set<Guardian> guardians = new HashSet<>();
 
     @PrePersist

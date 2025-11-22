@@ -54,6 +54,7 @@ public class Guardian {
     private LocalDateTime createdAt;
 
     @ManyToMany(mappedBy = "guardians", fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<Child> children = new HashSet<>();
 
     @PrePersist
