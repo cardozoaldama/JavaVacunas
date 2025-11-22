@@ -18,13 +18,12 @@ public class TestContainersConfiguration {
      * The container is automatically started and stopped by TestContainers.
      * Spring Boot auto-configures the datasource from this container.
      *
-     * @return OracleContainer configured with Oracle XE 23c
+     * @return OracleContainer configured with Oracle XE 21c
      */
     @Bean
     @ServiceConnection
     OracleContainer oracleContainer() {
-        return new OracleContainer(DockerImageName.parse("gvenzl/oracle-xe:23-slim-faststart"))
-                .withDatabaseName("XEPDB1")
+        return new OracleContainer(DockerImageName.parse("gvenzl/oracle-xe:21-slim-faststart"))
                 .withUsername("javacunas_test")
                 .withPassword("test_password")
                 .withReuse(true);
