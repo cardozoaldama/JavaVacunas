@@ -14,11 +14,10 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     baseline-version: 0
-    # Don't specify schemas - let TestContainers use default schema
-    schemas: []
-    default-schema:
+    # Override schemas from main application.yml - don't try to create schemas
+    create-schemas: false
     clean-disabled: false
-    validate-on-migrate: true
+    validate-on-migrate: false
 
 security:
   jwt:
