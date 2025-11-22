@@ -55,9 +55,6 @@ class VaccineInventoryServiceIT extends BaseIT {
                 .description("Hepatitis B vaccine")
                 .manufacturer("Pharma Corp")
                 .diseasePrevented("Hepatitis B")
-                .routeOfAdministration("Intramuscular")
-                .dosage("0.5 ml")
-                .storageConditions("2-8°C")
                 .isActive('Y')
                 .build();
         testVaccine = vaccineRepository.save(testVaccine);
@@ -68,8 +65,9 @@ class VaccineInventoryServiceIT extends BaseIT {
                 .email("warehouse@hospital.com")
                 .firstName("Warehouse")
                 .lastName("Manager")
-                .password("encoded_password")
-                .active(true)
+                .passwordHash("encoded_password")
+                .role(User.UserRole.DOCTOR)
+                .isActive('Y')
                 .build();
         testUser = userRepository.save(testUser);
     }
@@ -451,10 +449,10 @@ class VaccineInventoryServiceIT extends BaseIT {
                 testUser.getId()
         );
 
-        // Mark as quarantined
+        // Mark as recalled
         vaccineInventoryService.updateStatus(
                 inventory.getId(),
-                VaccineInventory.InventoryStatus.QUARANTINED
+                VaccineInventory.InventoryStatus.RECALLED
         );
 
         // Act

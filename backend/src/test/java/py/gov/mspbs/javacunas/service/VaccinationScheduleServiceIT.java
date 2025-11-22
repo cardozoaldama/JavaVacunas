@@ -43,9 +43,6 @@ class VaccinationScheduleServiceIT extends BaseIT {
                 .description("Tuberculosis vaccine")
                 .manufacturer("Test Manufacturer")
                 .diseasePrevented("Tuberculosis")
-                .routeOfAdministration("Intradermal")
-                .dosage("0.1 ml")
-                .storageConditions("2-8°C")
                 .isActive('Y')
                 .build();
         bcgVaccine = vaccineRepository.save(bcgVaccine);
@@ -55,9 +52,6 @@ class VaccinationScheduleServiceIT extends BaseIT {
                 .description("Hepatitis B vaccine")
                 .manufacturer("Test Manufacturer")
                 .diseasePrevented("Hepatitis B")
-                .routeOfAdministration("Intramuscular")
-                .dosage("0.5 ml")
-                .storageConditions("2-8°C")
                 .isActive('Y')
                 .build();
         hepatitisBVaccine = vaccineRepository.save(hepatitisBVaccine);
@@ -67,9 +61,6 @@ class VaccinationScheduleServiceIT extends BaseIT {
                 .description("Diphtheria, Tetanus, Pertussis vaccine")
                 .manufacturer("Test Manufacturer")
                 .diseasePrevented("Diphtheria, Tetanus, Pertussis")
-                .routeOfAdministration("Intramuscular")
-                .dosage("0.5 ml")
-                .storageConditions("2-8°C")
                 .isActive('Y')
                 .build();
         dtpVaccine = vaccineRepository.save(dtpVaccine);
@@ -99,8 +90,8 @@ class VaccinationScheduleServiceIT extends BaseIT {
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(7); // BCG, Hep B (3 doses), DTP (3 doses) up to 6 months
         assertThat(result).allMatch(schedule ->
-                schedule.getAgeInMonths() <= ageInMonths &&
-                schedule.isMandatory() &&
+                schedule.getRecommendedAgeMonths() <= ageInMonths &&
+                schedule.getIsMandatory() == 'Y' &&
                 "PY".equals(schedule.getCountryCode())
         );
 
@@ -120,7 +111,7 @@ class VaccinationScheduleServiceIT extends BaseIT {
 
         // Assert
         assertThat(result).isNotEmpty();
-        assertThat(result).allMatch(VaccinationSchedule::isMandatory);
+        assertThat(result).allMatch(schedule -> schedule.getIsMandatory() == 'Y');
 
         // Count schedules for different vaccines
         long bcgCount = result.stream()
@@ -151,7 +142,7 @@ class VaccinationScheduleServiceIT extends BaseIT {
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(2); // BCG and Hepatitis B at birth
         assertThat(result).allMatch(schedule ->
-                schedule.getAgeInMonths() == 0 && schedule.isMandatory()
+                schedule.getRecommendedAgeMonths() == 0 && schedule.getIsMandatory() == 'Y'
         );
     }
 
@@ -169,7 +160,7 @@ class VaccinationScheduleServiceIT extends BaseIT {
 
         // Verify ordering (age should be in ascending order)
         List<Integer> ages = result.stream()
-                .map(VaccinationSchedule::getAgeInMonths)
+                .map(VaccinationSchedule::getRecommendedAgeMonths)
                 .toList();
 
         for (int i = 1; i < ages.size(); i++) {
@@ -187,9 +178,6 @@ class VaccinationScheduleServiceIT extends BaseIT {
                         .description("Test")
                         .manufacturer("Test")
                         .diseasePrevented("Test")
-                        .routeOfAdministration("Test")
-                        .dosage("Test")
-                        .storageConditions("Test")
                         .isActive('Y')
                         .build()
         );
@@ -221,12 +209,12 @@ class VaccinationScheduleServiceIT extends BaseIT {
         // Assert
         assertThat(result).isNotEmpty();
         assertThat(result).anyMatch(schedule ->
-                schedule.getAgeInMonths() == 2 &&
+                schedule.getRecommendedAgeMonths() == 2 &&
                 schedule.getVaccine().getName().equals("Hepatitis B") &&
                 schedule.getDoseNumber() == 2
         );
         assertThat(result).anyMatch(schedule ->
-                schedule.getAgeInMonths() == 2 &&
+                schedule.getRecommendedAgeMonths() == 2 &&
                 schedule.getVaccine().getName().equals("DTP") &&
                 schedule.getDoseNumber() == 1
         );
@@ -244,24 +232,24 @@ class VaccinationScheduleServiceIT extends BaseIT {
         // Assert
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(7); // All schedules up to 12 months
-        assertThat(result).allMatch(schedule -> schedule.getAgeInMonths() <= 12);
+        assertThat(result).allMatch(schedule -> schedule.getRecommendedAgeMonths() <= 12);
 
         // Verify none of the 18-month schedules are included
-        assertThat(result).noneMatch(schedule -> schedule.getAgeInMonths() == 18);
+        assertThat(result).noneMatch(schedule -> schedule.getRecommendedAgeMonths() == 18);
     }
 
     /**
      * Helper method to create a vaccination schedule.
      */
     private void createSchedule(Vaccine vaccine, String countryCode, Integer ageInMonths,
-                               Integer doseNumber, boolean mandatory, String description) {
+                               Integer doseNumber, boolean mandatory, String notes) {
         VaccinationSchedule schedule = VaccinationSchedule.builder()
                 .vaccine(vaccine)
                 .countryCode(countryCode)
-                .ageInMonths(ageInMonths)
+                .recommendedAgeMonths(ageInMonths)
                 .doseNumber(doseNumber)
-                .mandatory(mandatory)
-                .description(description)
+                .isMandatory(mandatory ? 'Y' : 'N')
+                .notes(notes)
                 .build();
         scheduleRepository.save(schedule);
     }

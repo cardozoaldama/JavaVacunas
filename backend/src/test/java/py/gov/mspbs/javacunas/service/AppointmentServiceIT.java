@@ -54,8 +54,7 @@ class AppointmentServiceIT extends BaseIT {
                 .lastName("Pérez")
                 .documentNumber("1234567")
                 .dateOfBirth(LocalDate.now().minusYears(2))
-                .gender('M')
-                .deleted(false)
+                .gender(Child.Gender.M)
                 .build();
         testChild = childRepository.save(testChild);
 
@@ -65,8 +64,9 @@ class AppointmentServiceIT extends BaseIT {
                 .email("test@test.com")
                 .firstName("Test")
                 .lastName("User")
-                .password("encoded_password")
-                .active(true)
+                .passwordHash("encoded_password")
+                .role(User.UserRole.DOCTOR)
+                .isActive('Y')
                 .build();
         testUser = userRepository.save(testUser);
     }
@@ -114,7 +114,7 @@ class AppointmentServiceIT extends BaseIT {
     @DisplayName("Should throw exception when creating appointment with deleted child")
     void createAppointment_WithDeletedChild_ShouldThrowException() {
         // Arrange
-        testChild.setDeleted(true);
+        testChild.softDelete();
         childRepository.save(testChild);
 
         LocalDateTime appointmentDate = LocalDateTime.now().plusDays(7);

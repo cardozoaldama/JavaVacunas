@@ -59,8 +59,7 @@ class VaccinationRecordServiceIT extends BaseIT {
                 .lastName("González")
                 .documentNumber("7654321")
                 .dateOfBirth(LocalDate.now().minusMonths(6))
-                .gender('F')
-                .deleted(false)
+                .gender(Child.Gender.F)
                 .build();
         testChild = childRepository.save(testChild);
 
@@ -70,9 +69,6 @@ class VaccinationRecordServiceIT extends BaseIT {
                 .description("Tuberculosis vaccine")
                 .manufacturer("Test Manufacturer")
                 .diseasePrevented("Tuberculosis")
-                .routeOfAdministration("Intradermal")
-                .dosage("0.1 ml")
-                .storageConditions("2-8°C")
                 .isActive('Y')
                 .build();
         testVaccine = vaccineRepository.save(testVaccine);
@@ -83,8 +79,9 @@ class VaccinationRecordServiceIT extends BaseIT {
                 .email("doctor@hospital.com")
                 .firstName("Dr.")
                 .lastName("Smith")
-                .password("encoded_password")
-                .active(true)
+                .passwordHash("encoded_password")
+                .role(User.UserRole.DOCTOR)
+                .isActive('Y')
                 .build();
         testUser = userRepository.save(testUser);
 
@@ -146,7 +143,7 @@ class VaccinationRecordServiceIT extends BaseIT {
     @DisplayName("Should throw exception when creating record with deleted child")
     void createVaccinationRecord_WithDeletedChild_ShouldThrowException() {
         // Arrange
-        testChild.setDeleted(true);
+        testChild.softDelete();
         childRepository.save(testChild);
 
         CreateVaccinationRecordRequest request = CreateVaccinationRecordRequest.builder()
