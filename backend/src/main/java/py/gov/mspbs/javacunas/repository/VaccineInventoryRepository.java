@@ -64,4 +64,11 @@ public interface VaccineInventoryRepository extends JpaRepository<VaccineInvento
      */
     List<VaccineInventory> findByBatchNumber(String batchNumber);
 
+    /**
+     * Get available stock using Oracle PL/SQL function.
+     * This considers only non-expired, available inventory.
+     */
+    @Query(value = "SELECT fn_get_available_stock(:vaccineId) FROM DUAL", nativeQuery = true)
+    Integer getAvailableStock(@Param("vaccineId") Long vaccineId);
+
 }
