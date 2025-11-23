@@ -87,7 +87,7 @@ class PlSqlVaccinationServiceTest extends BaseUnitTest {
             // Then
             assertThat(recordId).isEqualTo(expectedRecordId);
             verify(entityManager).createStoredProcedureQuery("sp_administer_vaccine");
-            verify(storedProcedureQuery, times(7)).registerStoredProcedureParameter(anyString(), any(Class.class), any(ParameterMode.class));
+            verify(storedProcedureQuery, times(8)).registerStoredProcedureParameter(anyString(), any(Class.class), any(ParameterMode.class));
             verify(storedProcedureQuery).setParameter("p_child_id", childId);
             verify(storedProcedureQuery).setParameter("p_vaccine_id", vaccineId);
             verify(storedProcedureQuery).setParameter("p_administered_by", userId);
