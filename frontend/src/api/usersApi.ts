@@ -1,4 +1,4 @@
-import { apiClient } from './client';
+import apiClient from '@/lib/api-client';
 
 export interface UserDto {
   id: number;
