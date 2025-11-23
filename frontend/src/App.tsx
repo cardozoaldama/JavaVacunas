@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/authStore';
 import Login from '@/pages/Login';
 import Dashboard from '@/pages/Dashboard';
 import Children from '@/pages/Children';
+import ChildDetails from '@/pages/ChildDetails';
 import Vaccines from '@/pages/Vaccines';
 import Appointments from '@/pages/Appointments';
 import Layout from '@/components/Layout';
@@ -38,6 +39,7 @@ function App() {
           >
             <Route index element={<Dashboard />} />
             <Route path="children" element={<Children />} />
+            <Route path="children/:id" element={<ChildDetails />} />
             <Route path="vaccines" element={<Vaccines />} />
             <Route path="appointments" element={<Appointments />} />
           </Route>
