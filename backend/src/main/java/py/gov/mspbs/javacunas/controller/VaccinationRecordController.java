@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,7 +100,9 @@ public class VaccinationRecordController {
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Get upcoming vaccinations", description = "Retrieve upcoming vaccine doses")
     public ResponseEntity<List<VaccinationRecordDto>> getUpcomingVaccinations(
-            @RequestParam(defaultValue = "30") int daysAhead) {
+            @RequestParam(defaultValue = "30")
+            @Min(value = 1, message = "Days ahead must be at least 1")
+            @Max(value = 365, message = "Days ahead must not exceed 365") int daysAhead) {
         List<VaccinationRecordDto> records = vaccinationRecordService.getUpcomingVaccinations(daysAhead);
         return ResponseEntity.ok(records);
     }

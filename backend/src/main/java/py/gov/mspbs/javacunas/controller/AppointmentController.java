@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import py.gov.mspbs.javacunas.entity.Appointment;
@@ -32,6 +33,7 @@ public class AppointmentController {
      * Create a new appointment.
      */
     @PostMapping
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Create appointment", description = "Create a new vaccination appointment")
     public ResponseEntity<Appointment> createAppointment(
             @RequestParam Long childId,
@@ -54,6 +56,7 @@ public class AppointmentController {
      * Get appointment by ID.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Get appointment", description = "Retrieve appointment by ID")
     public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
         Appointment appointment = appointmentService.getAppointmentById(id);
@@ -64,6 +67,7 @@ public class AppointmentController {
      * Get appointments by child ID.
      */
     @GetMapping("/child/{childId}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Get child appointments", description = "Retrieve all appointments for a child")
     public ResponseEntity<List<Appointment>> getAppointmentsByChildId(@PathVariable Long childId) {
         List<Appointment> appointments = appointmentService.getAppointmentsByChildId(childId);
@@ -74,6 +78,7 @@ public class AppointmentController {
      * Get upcoming appointments.
      */
     @GetMapping("/upcoming")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Get upcoming appointments", description = "Retrieve all upcoming appointments")
     public ResponseEntity<List<Appointment>> getUpcomingAppointments() {
         List<Appointment> appointments = appointmentService.getUpcomingAppointments();
@@ -84,6 +89,7 @@ public class AppointmentController {
      * Get appointments by status.
      */
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Get appointments by status", description = "Retrieve appointments by status")
     public ResponseEntity<List<Appointment>> getAppointmentsByStatus(
             @PathVariable Appointment.AppointmentStatus status) {
@@ -95,6 +101,7 @@ public class AppointmentController {
      * Update appointment status.
      */
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Update appointment status", description = "Update the status of an appointment")
     public ResponseEntity<Appointment> updateAppointmentStatus(
             @PathVariable Long id,
@@ -107,6 +114,7 @@ public class AppointmentController {
      * Confirm appointment.
      */
     @PutMapping("/{id}/confirm")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Confirm appointment", description = "Confirm an appointment")
     public ResponseEntity<Appointment> confirmAppointment(@PathVariable Long id) {
         Appointment appointment = appointmentService.confirmAppointment(id);
@@ -117,6 +125,7 @@ public class AppointmentController {
      * Complete appointment.
      */
     @PutMapping("/{id}/complete")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Complete appointment", description = "Mark appointment as completed")
     public ResponseEntity<Appointment> completeAppointment(@PathVariable Long id) {
         Appointment appointment = appointmentService.completeAppointment(id);
@@ -127,6 +136,7 @@ public class AppointmentController {
      * Cancel appointment.
      */
     @PutMapping("/{id}/cancel")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Cancel appointment", description = "Cancel an appointment")
     public ResponseEntity<Appointment> cancelAppointment(@PathVariable Long id) {
         Appointment appointment = appointmentService.cancelAppointment(id);
