@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import py.gov.mspbs.javacunas.dto.ChildDto;
 import py.gov.mspbs.javacunas.dto.CreateChildRequest;
+import py.gov.mspbs.javacunas.security.UserPrincipal;
 import py.gov.mspbs.javacunas.service.ChildService;
 
 import java.util.List;
@@ -84,6 +86,18 @@ public class ChildController {
             @NotBlank(message = "Search query cannot be blank")
             @Size(min = 2, max = 100, message = "Search query must be between 2 and 100 characters") String query) {
         List<ChildDto> children = childService.searchChildren(query);
+        return ResponseEntity.ok(children);
+    }
+
+    /**
+     * Get children for the authenticated user (PARENT role).
+     */
+    @GetMapping("/my-children")
+    @PreAuthorize("hasRole('PARENT')")
+    @Operation(summary = "Get my children", description = "Retrieve children associated with the authenticated parent")
+    public ResponseEntity<List<ChildDto>> getMyChildren(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        List<ChildDto> children = childService.getChildrenByUserId(userPrincipal.getId());
         return ResponseEntity.ok(children);
     }
 

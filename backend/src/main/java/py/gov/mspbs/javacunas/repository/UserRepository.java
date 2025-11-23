@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import py.gov.mspbs.javacunas.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,5 +32,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * Check if email exists.
      */
     boolean existsByEmail(String email);
+
+    /**
+     * Find all users by role.
+     */
+    List<User> findByRole(User.UserRole role);
+
+    /**
+     * Find all active users by role.
+     */
+    List<User> findByRoleAndIsActive(User.UserRole role, Character isActive);
 
 }

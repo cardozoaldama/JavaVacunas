@@ -54,6 +54,12 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     List<Child> findByGuardianDocumentNumber(@Param("documentNumber") String documentNumber);
 
     /**
+     * Find children by user id (through guardians).
+     */
+    @Query("SELECT c FROM Child c JOIN c.guardians g WHERE g.user.id = :userId AND c.deletedAt IS NULL")
+    List<Child> findByUserId(@Param("userId") Long userId);
+
+    /**
      * Find active children with their guardians eagerly loaded.
      * Useful for avoiding N+1 queries when you need both child and guardian data.
      */

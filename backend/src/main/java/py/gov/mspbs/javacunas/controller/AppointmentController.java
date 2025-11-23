@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import py.gov.mspbs.javacunas.entity.Appointment;
+import py.gov.mspbs.javacunas.entity.User;
 import py.gov.mspbs.javacunas.security.UserPrincipal;
 import py.gov.mspbs.javacunas.service.AppointmentService;
 
@@ -152,6 +153,51 @@ public class AppointmentController {
     public ResponseEntity<Appointment> cancelAppointment(@PathVariable Long id) {
         Appointment appointment = appointmentService.cancelAppointment(id);
         return ResponseEntity.ok(appointment);
+    }
+
+    /**
+     * Get appointments for the authenticated user's children (PARENT role).
+     */
+    @GetMapping("/my-appointments")
+    @PreAuthorize("hasRole('PARENT')")
+    @Operation(summary = "Get my appointments", description = "Retrieve appointments for the authenticated parent's children")
+    public ResponseEntity<List<Appointment>> getMyAppointments(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        List<Appointment> appointments = appointmentService.getAppointmentsByUserId(userPrincipal.getId());
+        return ResponseEntity.ok(appointments);
+    }
+
+    /**
+     * Get appointments assigned to the authenticated user (DOCTOR/NURSE role).
+     */
+    @GetMapping("/assigned-to-me")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
+    @Operation(summary = "Get assigned appointments", description = "Retrieve appointments assigned to the authenticated medical staff")
+    public ResponseEntity<List<Appointment>> getAssignedAppointments(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        List<Appointment> appointments = appointmentService.getAppointmentsAssignedToUser(userPrincipal.getId());
+        return ResponseEntity.ok(appointments);
+    }
+
+    /**
+     * Get appointments filtered based on user role.
+     * PARENT: Returns appointments for their children.
+     * DOCTOR/NURSE: Returns all appointments.
+     */
+    @GetMapping("/role-based")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
+    @Operation(summary = "Get role-based appointments", description = "Retrieve appointments based on user role")
+    public ResponseEntity<List<Appointment>> getRoleBasedAppointments(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        List<Appointment> appointments;
+        if (userPrincipal.getRole() == User.UserRole.PARENT) {
+            appointments = appointmentService.getAppointmentsByUserId(userPrincipal.getId());
+        } else {
+            appointments = appointmentService.getAllAppointments();
+        }
+
+        return ResponseEntity.ok(appointments);
     }
 
 }
