@@ -19,6 +19,11 @@ export const childrenApi = {
     return response.data;
   },
 
+  getMyChildren: async (): Promise<Child[]> => {
+    const response = await apiClient.get<Child[]>('/children/my-children');
+    return response.data;
+  },
+
   create: async (data: Omit<Child, 'id' | 'ageInMonths' | 'createdAt' | 'updatedAt'>): Promise<Child> => {
     const response = await apiClient.post<Child>('/children', data);
     return response.data;
