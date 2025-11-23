@@ -107,6 +107,15 @@ public class AppointmentService {
     }
 
     /**
+     * Get all appointments.
+     */
+    @Transactional(readOnly = true)
+    public List<Appointment> getAllAppointments() {
+        log.debug("Retrieving all appointments");
+        return appointmentRepository.findAll();
+    }
+
+    /**
      * Get appointments by status.
      */
     @Transactional(readOnly = true)

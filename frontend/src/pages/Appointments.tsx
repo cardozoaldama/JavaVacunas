@@ -16,7 +16,7 @@ export default function Appointments() {
 
   const { data: appointments, isLoading, error } = useQuery({
     queryKey: ['appointments'],
-    queryFn: appointmentsApi.getUpcoming,
+    queryFn: appointmentsApi.getAll,
   });
 
   const confirmMutation = useMutation({

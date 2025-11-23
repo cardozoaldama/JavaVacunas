@@ -75,6 +75,17 @@ public class AppointmentController {
     }
 
     /**
+     * Get all appointments.
+     */
+    @GetMapping
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
+    @Operation(summary = "Get all appointments", description = "Retrieve all appointments")
+    public ResponseEntity<List<Appointment>> getAllAppointments() {
+        List<Appointment> appointments = appointmentService.getAllAppointments();
+        return ResponseEntity.ok(appointments);
+    }
+
+    /**
      * Get upcoming appointments.
      */
     @GetMapping("/upcoming")
