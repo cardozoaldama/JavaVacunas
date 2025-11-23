@@ -1,6 +1,5 @@
-spring:
-  datasource:
-    url: jdbc:oracle:thin:@oracle-db:1521/XEPDB1
+# Docker profile configuration
+# Database connection is handled by environment variables in .env.docker
 
 logging:
   level:
