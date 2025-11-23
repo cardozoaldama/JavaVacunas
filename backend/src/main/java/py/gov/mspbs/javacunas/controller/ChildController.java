@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,7 +79,10 @@ public class ChildController {
     @GetMapping("/search")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Search children", description = "Search children by name")
-    public ResponseEntity<List<ChildDto>> searchChildren(@RequestParam String query) {
+    public ResponseEntity<List<ChildDto>> searchChildren(
+            @RequestParam
+            @NotBlank(message = "Search query cannot be blank")
+            @Size(min = 2, max = 100, message = "Search query must be between 2 and 100 characters") String query) {
         List<ChildDto> children = childService.searchChildren(query);
         return ResponseEntity.ok(children);
     }

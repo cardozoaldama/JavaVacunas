@@ -17,7 +17,7 @@ services:
       - ./docker/oracle/init:/opt/oracle/scripts/startup
     shm_size: 1gb
     healthcheck:
-      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -S JAVACUNAS/JavaCunas123@//localhost:1521/XEPDB1 | grep -q '1' || exit 1"]
+      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -S ${SPRING_DATASOURCE_USERNAME}/${SPRING_DATASOURCE_PASSWORD}@//localhost:1521/XEPDB1 | grep -q '1' || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 10
