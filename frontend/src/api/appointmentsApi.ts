@@ -78,4 +78,19 @@ export const appointmentsApi = {
     const response = await apiClient.put<Appointment>(`/appointments/${id}/cancel`);
     return response.data;
   },
+
+  getMyAppointments: async (): Promise<Appointment[]> => {
+    const response = await apiClient.get<Appointment[]>('/appointments/my-appointments');
+    return response.data;
+  },
+
+  getAssignedToMe: async (): Promise<Appointment[]> => {
+    const response = await apiClient.get<Appointment[]>('/appointments/assigned-to-me');
+    return response.data;
+  },
+
+  getRoleBasedAppointments: async (): Promise<Appointment[]> => {
+    const response = await apiClient.get<Appointment[]>('/appointments/role-based');
+    return response.data;
+  },
 };
