@@ -112,17 +112,21 @@ JavaVacunas/
 Get the application running in 3 simple steps:
 
 ```bash
-# 1. Clone and configure
+# 1. Clone the repository
 git clone https://github.com/cardozoaldama/JavaVacunas.git
 cd JavaVacunas
-cp .env.example .env
 
 # 2. Start all services with Docker/Podman
-docker compose up -d
-# or
-podman-compose up -d
+# Note: Uses .env.docker by default for containerized setup
+docker compose --env-file .env.docker up -d
+# or with Podman
+podman-compose --env-file .env.docker up -d
 
-# 3. Access the application
+# 3. Monitor startup (first launch takes 3-5 minutes for Oracle initialization)
+docker compose ps
+docker compose logs -f
+
+# 4. Access the application once all services are healthy
 # Frontend: http://localhost:5173
 # Backend API: http://localhost:8080
 # Swagger UI: http://localhost:8080/swagger-ui.html
@@ -133,7 +137,11 @@ podman-compose up -d
 - Nurse: `nurse` / `admin123`
 - Parent: `parent` / `admin123`
 
-> For local development without containers, see [Getting Started (Detailed)](#getting-started-detailed).
+**Important Notes:**
+- The system uses `.env.docker` for containerized deployments (includes correct Docker network hostnames)
+- First startup takes 3-5 minutes for Oracle database initialization
+- Services start in order: oracle-db → backend → frontend (based on health checks)
+- For local development without containers, see [Getting Started (Detailed)](#getting-started-detailed)
 
 ## Getting Started (Detailed)
 
@@ -146,13 +154,18 @@ cd JavaVacunas
 
 ### 2. Configure Environment Variables
 
-Create a `.env` file in the project root:
+The project includes two environment files for different deployment scenarios:
 
-```bash
-cp .env.example .env
-```
+**For Docker/Podman Compose (containerized deployment):**
+- Use `.env.docker` (already configured with Docker network hostnames)
+- Database URL uses `oracle-db` as hostname (Docker service name)
 
-Edit `.env` and update values as needed. Key configurations:
+**For local development:**
+- Create `.env` from the example: `cp .env.example .env`
+- Database URL uses `localhost` as hostname
+- Start only the database container, run backend/frontend locally
+
+Key configurations in environment files:
 
 ```bash
 # Database passwords
@@ -170,9 +183,10 @@ VITE_API_BASE_URL=http://localhost:8080/api/v1
 ```
 
 **Security Notes:**
-- Never commit `.env` to version control (already in `.gitignore`)
+- Never commit `.env` files to version control (already in `.gitignore`)
 - Change all default passwords in production
 - Use strong JWT secret for production deployments
+- `.env.docker` is tracked in git for convenience but contains non-production credentials
 
 ### 3. Development Mode Options
 
@@ -182,13 +196,19 @@ Choose between containerized or local development:
 
 ```bash
 # Start all services (database, backend, frontend)
-docker compose up -d
+docker compose --env-file .env.docker up -d
+
+# Monitor service health (wait for all to be "healthy")
+docker compose ps
 
 # View logs
 docker compose logs -f
 
 # Stop services
 docker compose down
+
+# Stop and remove all data (clean slate)
+docker compose down -v
 ```
 
 #### Option B: Local Development (Recommended for Active Development)
@@ -231,7 +251,10 @@ Interactive API documentation available when backend is running:
 
 ```bash
 # Start all services
-docker compose up -d
+docker compose --env-file .env.docker up -d
+
+# Check service health status
+docker compose ps
 
 # View logs (all services)
 docker compose logs -f
@@ -312,7 +335,7 @@ docker compose logs oracle-db
 
 # Common fix: Remove volume and restart
 docker compose down -v
-docker compose up -d oracle-db
+docker compose --env-file .env.docker up -d oracle-db
 
 # Wait for healthcheck (can take 3-5 minutes on first start)
 docker compose ps
@@ -321,7 +344,12 @@ docker compose ps
 **Connection refused errors:**
 - Database takes 2-3 minutes to initialize on first start
 - Check health status: `docker compose ps`
-- Verify credentials in `.env` match the database user
+- Verify credentials in `.env.docker` match the database user
+
+**Health check always failing:**
+- Ensure you're using `.env.docker` when running with Docker Compose
+- The health check requires `SPRING_DATASOURCE_USERNAME` and `SPRING_DATASOURCE_PASSWORD` environment variables in the oracle-db service
+- If using custom credentials, update both `.env.docker` and `compose.yml`
 
 ### Backend Issues
 
