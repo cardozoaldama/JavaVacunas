@@ -78,4 +78,28 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     @Query("SELECT COUNT(g) FROM Child c JOIN c.guardians g WHERE c.id = :childId AND c.deletedAt IS NULL")
     Long countGuardiansByChildId(@Param("childId") Long childId);
 
+    /**
+     * Get child age in months using Oracle PL/SQL function.
+     */
+    @Query(value = "SELECT fn_get_child_age_months(:childId) FROM DUAL", nativeQuery = true)
+    Integer getChildAgeInMonths(@Param("childId") Long childId);
+
+    /**
+     * Get vaccination completion percentage using Oracle PL/SQL package.
+     */
+    @Query(value = "SELECT pkg_vaccination_management.get_vaccination_completion(:childId) FROM DUAL", nativeQuery = true)
+    Double getVaccinationCompletion(@Param("childId") Long childId);
+
+    /**
+     * Get overdue vaccines count using Oracle PL/SQL package.
+     */
+    @Query(value = "SELECT pkg_vaccination_management.get_overdue_vaccines_count(:childId) FROM DUAL", nativeQuery = true)
+    Integer getOverdueVaccinesCount(@Param("childId") Long childId);
+
+    /**
+     * Calculate next appointment date using Oracle PL/SQL package.
+     */
+    @Query(value = "SELECT pkg_vaccination_management.calculate_next_appointment(:childId) FROM DUAL", nativeQuery = true)
+    LocalDate calculateNextAppointment(@Param("childId") Long childId);
+
 }
