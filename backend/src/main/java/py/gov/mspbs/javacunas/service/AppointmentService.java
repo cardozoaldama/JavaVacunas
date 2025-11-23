@@ -116,6 +116,15 @@ public class AppointmentService {
     }
 
     /**
+     * Get appointments for a user's children (for PARENT role).
+     */
+    @Transactional(readOnly = true)
+    public List<Appointment> getAppointmentsByUserId(Long userId) {
+        log.debug("Retrieving appointments for user: {}", userId);
+        return appointmentRepository.findByUserIdThroughChildren(userId);
+    }
+
+    /**
      * Get appointments by status.
      */
     @Transactional(readOnly = true)

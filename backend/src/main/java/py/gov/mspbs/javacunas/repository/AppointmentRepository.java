@@ -62,4 +62,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
            "ORDER BY a.appointmentDate DESC")
     List<Appointment> findByCreatedById(@Param("userId") Long userId);
 
+    /**
+     * Find appointments for children associated with a user (through guardians).
+     */
+    @Query("SELECT a FROM Appointment a " +
+           "JOIN a.child c " +
+           "JOIN c.guardians g " +
+           "WHERE g.user.id = :userId " +
+           "AND c.deletedAt IS NULL " +
+           "ORDER BY a.appointmentDate DESC")
+    List<Appointment> findByUserIdThroughChildren(@Param("userId") Long userId);
+
 }

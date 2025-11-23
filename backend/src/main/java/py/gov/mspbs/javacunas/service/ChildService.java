@@ -126,6 +126,18 @@ public class ChildService {
     }
 
     /**
+     * Get children by user ID (through guardians).
+     */
+    @Transactional(readOnly = true)
+    public List<ChildDto> getChildrenByUserId(Long userId) {
+        log.debug("Retrieving children for user ID: {}", userId);
+
+        return childRepository.findByUserId(userId).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Update child information.
      */
     @Transactional
