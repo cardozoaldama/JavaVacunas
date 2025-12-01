@@ -102,6 +102,33 @@ docker exec -it javacunas-oracle sqlplus JAVACUNAS/JavaCunas123@XEPDB1
 - **Nurse**: `nurse` / `admin123`
 - **Parent**: `parent` / `admin123`
 
+## Specialized Sub-Agents
+
+JavaVacunas includes 12 specialized sub-agent definitions optimized for different development tasks. These agents have deep knowledge of the project's architecture, patterns, and conventions.
+
+**Available Agents:**
+1. **backend-feature-developer** - Spring Boot layered architecture expert
+2. **api-rest-designer** - RESTful API design specialist
+3. **database-migration-specialist** - Flyway and Oracle migration expert
+4. **plsql-integration-developer** - PL/SQL procedures and integration
+5. **jpa-security-specialist** - Spring Security and JWT authentication
+6. **frontend-feature-developer** - React/TypeScript expert
+7. **api-integration-developer** - Frontend-backend integration
+8. **unit-test-engineer** - TDD and 90%+ coverage specialist
+9. **integration-test-engineer** - Database integration testing
+10. **code-review-specialist** - Standards and quality enforcement
+11. **docker-cicd-specialist** - DevOps, Docker/Podman, GitHub Actions
+12. **performance-optimization-specialist** - Backend/frontend optimization
+
+**Complete agent definitions:** See `.claude/AGENTS.md` for full prompts, patterns, and usage examples.
+
+**Quick Selection Guide:**
+- **Backend features**: api-rest-designer → database-migration-specialist → backend-feature-developer → unit-test-engineer
+- **Frontend features**: api-integration-developer → frontend-feature-developer
+- **Database work**: database-migration-specialist → plsql-integration-developer
+- **Code review**: code-review-specialist → unit-test-engineer
+- **DevOps**: docker-cicd-specialist → performance-optimization-specialist
+
 ## Architecture & Code Organization
 
 ### Backend Architecture (Spring Boot)
