@@ -45,12 +45,14 @@ public interface GuardianRepository extends JpaRepository<Guardian, Long> {
     /**
      * Find all guardians with their children eagerly loaded.
      * Useful for avoiding N+1 queries when you need both guardian and children data.
+     * Note: This fetches all children including soft-deleted ones. Filter in application if needed.
      */
-    @Query("SELECT DISTINCT g FROM Guardian g LEFT JOIN FETCH g.children c WHERE c.deletedAt IS NULL OR c IS NULL")
+    @Query("SELECT DISTINCT g FROM Guardian g LEFT JOIN FETCH g.children")
     List<Guardian> findAllWithChildren();
 
     /**
      * Find a specific guardian with children eagerly loaded.
+     * Note: This fetches all children including soft-deleted ones. Filter in application if needed.
      */
     @Query("SELECT g FROM Guardian g LEFT JOIN FETCH g.children WHERE g.id = :guardianId")
     Optional<Guardian> findByIdWithChildren(@Param("guardianId") Long guardianId);
