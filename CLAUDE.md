@@ -120,7 +120,12 @@ JavaVacunas includes 12 specialized sub-agent definitions optimized for differen
 11. **docker-cicd-specialist** - DevOps, Docker/Podman, GitHub Actions
 12. **performance-optimization-specialist** - Backend/frontend optimization
 
-**Complete agent definitions:** See `.claude/AGENTS.md` for full prompts, patterns, and usage examples.
+**Location:** Each sub-agent is defined in its own file in `.claude/agents/` directory. Claude Code automatically discovers and loads these agents based on task requirements.
+
+**How to Use:**
+- Use the Task tool to invoke a specific sub-agent by referencing its name
+- Claude Code will automatically select appropriate sub-agents based on task context
+- Each sub-agent includes full system prompts, code patterns, and quality checklists
 
 **Quick Selection Guide:**
 - **Backend features**: api-rest-designer → database-migration-specialist → backend-feature-developer → unit-test-engineer
