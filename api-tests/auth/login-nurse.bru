@@ -30,7 +30,8 @@ tests {
 
   test("should return user with NURSE role", function() {
     const data = res.getBody();
-    expect(data.user.role).to.equal("NURSE");
+    expect(data.role).to.equal("NURSE");
+    expect(data.username).to.equal("nurse");
   });
 }
 

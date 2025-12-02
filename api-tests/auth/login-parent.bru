@@ -30,7 +30,8 @@ tests {
 
   test("should return user with PARENT role", function() {
     const data = res.getBody();
-    expect(data.user.role).to.equal("PARENT");
+    expect(data.role).to.equal("PARENT");
+    expect(data.username).to.equal("parent");
   });
 }
 

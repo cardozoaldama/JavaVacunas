@@ -10,13 +10,22 @@ post {
   auth: none
 }
 
+script:pre-request {
+  const timestamp = Date.now();
+  const username = `parent.carlos.${timestamp}`;
+  const email = `carlos.benitez.${timestamp}@example.com`;
+
+  bru.setVar("testParentUsername", username);
+  bru.setVar("testParentEmail", email);
+}
+
 body:json {
   {
-    "username": "parent.carlos",
+    "username": "{{testParentUsername}}",
     "password": "Parent123!",
     "firstName": "Carlos",
     "lastName": "Benitez",
-    "email": "carlos.benitez@example.com",
+    "email": "{{testParentEmail}}",
     "role": "PARENT"
   }
 }
@@ -33,7 +42,8 @@ tests {
 
   test("should return user with PARENT role", function() {
     const data = res.getBody();
-    expect(data.user.role).to.equal("PARENT");
-    expect(data.user.firstName).to.equal("Carlos");
+    expect(data.role).to.equal("PARENT");
+    expect(data.firstName).to.equal("Carlos");
+    expect(data.username).to.include("parent.carlos.");
   });
 }

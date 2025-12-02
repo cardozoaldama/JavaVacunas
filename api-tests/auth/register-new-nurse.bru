@@ -10,15 +10,26 @@ post {
   auth: none
 }
 
+script:pre-request {
+  const timestamp = Date.now();
+  const username = `nurse.maria.${timestamp}`;
+  const email = `maria.gonzalez.${timestamp}@mspbs.gov.py`;
+  const licenseNumber = `NUR-2024-${timestamp}`;
+
+  bru.setVar("testNurseUsername", username);
+  bru.setVar("testNurseEmail", email);
+  bru.setVar("testNurseLicense", licenseNumber);
+}
+
 body:json {
   {
-    "username": "nurse.maria",
+    "username": "{{testNurseUsername}}",
     "password": "Nurse123!",
     "firstName": "Maria",
     "lastName": "Gonzalez",
-    "email": "maria.gonzalez@mspbs.gov.py",
+    "email": "{{testNurseEmail}}",
     "role": "NURSE",
-    "licenseNumber": "NUR-2024-001"
+    "licenseNumber": "{{testNurseLicense}}"
   }
 }
 
@@ -34,7 +45,8 @@ tests {
 
   test("should return user with NURSE role", function() {
     const data = res.getBody();
-    expect(data.user.role).to.equal("NURSE");
-    expect(data.user.firstName).to.equal("Maria");
+    expect(data.role).to.equal("NURSE");
+    expect(data.firstName).to.equal("Maria");
+    expect(data.username).to.include("nurse.maria.");
   });
 }
