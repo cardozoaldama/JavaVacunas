@@ -40,11 +40,13 @@ File > Open Collection > Select 'api-tests' folder
 ### Lesson 1: API Basics (45 min)
 
 **Objectives:**
+
 - Understand HTTP methods
 - Learn request/response structure
 - Practice using Bruno
 
 **Activities:**
+
 1. Run `auth/login-doctor.bru`
    - Explain POST method
    - Show request body (JSON)
@@ -61,6 +63,7 @@ File > Open Collection > Select 'api-tests' folder
    - Explain authentication requirement
 
 **Exercises:**
+
 - Students modify login credentials and observe errors
 - Students add new assertions to vaccine tests
 - Students create a test for getting vaccine by ID
@@ -68,11 +71,13 @@ File > Open Collection > Select 'api-tests' folder
 ### Lesson 2: CRUD Operations (90 min)
 
 **Objectives:**
+
 - Complete Create-Read-Update-Delete workflow
 - Understand RESTful conventions
 - Practice data validation
 
 **Activities:**
+
 1. **Create** - `children/create-child.bru`
    - Show POST with complex body
    - Demonstrate validation rules
@@ -91,6 +96,7 @@ File > Open Collection > Select 'api-tests' folder
    - Show 204 No Content response
 
 **Exercises:**
+
 - Students create their own child record
 - Students update and verify changes
 - Students attempt operations with wrong roles
@@ -98,11 +104,13 @@ File > Open Collection > Select 'api-tests' folder
 ### Lesson 3: Role-Based Access Control (60 min)
 
 **Objectives:**
+
 - Understand RBAC concept
 - Test permission enforcement
 - Practice security testing
 
 **Activities:**
+
 1. Login with all three roles
    - Doctor: Full access
    - Nurse: Read/write operational data
@@ -118,6 +126,7 @@ File > Open Collection > Select 'api-tests' folder
    - Error message structure
 
 **Exercises:**
+
 - Students create permission matrix
 - Students test inventory endpoints with parent token
 - Students identify which operations each role can perform
@@ -125,12 +134,15 @@ File > Open Collection > Select 'api-tests' folder
 ### Lesson 4: Complex Workflows (90 min)
 
 **Objectives:**
+
 - Chain multiple API calls
 - Manage state transitions
 - Work with related entities
 
 **Activities:**
+
 1. Complete Vaccination Workflow
+
    ```
    auth/login-nurse.bru
    → children/create-child.bru
@@ -150,6 +162,7 @@ File > Open Collection > Select 'api-tests' folder
    ```
 
 **Exercises:**
+
 - Students create complete appointment lifecycle
 - Students track vaccine from inventory to administration
 - Students design their own workflow scenarios
@@ -157,14 +170,17 @@ File > Open Collection > Select 'api-tests' folder
 ### Lesson 5: Testing & Validation (60 min)
 
 **Objectives:**
+
 - Write test assertions
 - Validate business rules
 - Test error scenarios
 
 **Activities:**
+
 1. Examine existing assertions
+
    ```javascript
-   test("should return 200 status", function() {
+   test("should return 200 status", function () {
      expect(res.getStatus()).to.equal(200);
    });
    ```
@@ -180,6 +196,7 @@ File > Open Collection > Select 'api-tests' folder
    - Duplicate records
 
 **Exercises:**
+
 - Students add 3 new assertions to a test
 - Students create a test for invalid data
 - Students test boundary conditions
@@ -201,6 +218,7 @@ File > Open Collection > Select 'api-tests' folder
 9. Views their child's records
 
 **Learning Points:**
+
 - Multi-role collaboration
 - Data flow between entities
 - Real-world healthcare workflow
@@ -216,6 +234,7 @@ File > Open Collection > Select 'api-tests' folder
 5. Verifies total available quantity
 
 **Learning Points:**
+
 - Inventory management
 - Proactive monitoring
 - Stock replenishment
@@ -234,6 +253,7 @@ File > Open Collection > Select 'api-tests' folder
 8. Records vaccination
 
 **Learning Points:**
+
 - State transitions
 - Role-specific actions
 - Appointment workflow
@@ -247,6 +267,7 @@ File > Open Collection > Select 'api-tests' folder
 ### Q: What's the difference between 401 and 403?
 
 **A:**
+
 - **401 Unauthorized**: No token or invalid token (not logged in)
 - **403 Forbidden**: Valid token but insufficient permissions (logged in as wrong role)
 
@@ -267,6 +288,7 @@ File > Open Collection > Select 'api-tests' folder
 ### Problem: "Connection refused"
 
 **Solution:**
+
 ```bash
 # Check if backend is running
 docker compose ps
@@ -281,6 +303,7 @@ curl http://localhost:8080/actuator/health
 ### Problem: "Token expired"
 
 **Solution:**
+
 ```bash
 # Tokens expire after 24 hours
 # Just re-run the login tests
@@ -289,6 +312,7 @@ curl http://localhost:8080/actuator/health
 ### Problem: "Validation error on dates"
 
 **Solution:**
+
 ```javascript
 // Use ISO 8601 format: YYYY-MM-DD
 "dateOfBirth": "2024-12-01"  // Correct
@@ -298,6 +322,7 @@ curl http://localhost:8080/actuator/health
 ### Problem: "Child not found"
 
 **Solution:**
+
 ```javascript
 // Make sure to run create-child.bru first
 // Or use an existing child ID from get-all-children.bru
@@ -332,16 +357,19 @@ curl http://localhost:8080/actuator/health
 ## Additional Resources
 
 ### Bruno Documentation
+
 - Official Docs: https://docs.usebruno.com/
 - Scripting Guide: https://docs.usebruno.com/scripting/introduction
 - Testing Guide: https://docs.usebruno.com/testing/introduction
 
 ### API Design
+
 - REST API Tutorial: https://restfulapi.net/
 - HTTP Status Codes: https://httpstatuses.com/
 - JWT Introduction: https://jwt.io/introduction
 
 ### Healthcare IT
+
 - Paraguay PAI Program: Information about vaccination schedules
 - FHIR Standard: https://www.hl7.org/fhir/
 - Healthcare Data Standards
@@ -388,6 +416,7 @@ curl http://localhost:8080/actuator/health
 ## Contact & Support
 
 For questions or issues:
+
 - Check the main README.md
 - Review Swagger docs at http://localhost:8080/swagger-ui.html
 - Check Bruno documentation

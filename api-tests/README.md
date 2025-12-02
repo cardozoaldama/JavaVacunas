@@ -13,6 +13,7 @@ This collection contains 50+ API tests covering all endpoints of the JavaVacunas
    - Or via npm: `npm install -g @usebruno/cli`
 
 2. Start the JavaVacunas backend
+
    ```bash
    # Option 1: Using Docker Compose
    docker compose --env-file .env.docker up -d
@@ -64,6 +65,7 @@ api-tests/
 Tests for user authentication and registration.
 
 **Tests:**
+
 - `login-doctor.bru` - Login with DOCTOR role
 - `login-nurse.bru` - Login with NURSE role
 - `login-parent.bru` - Login with PARENT role
@@ -72,21 +74,40 @@ Tests for user authentication and registration.
 - `invalid-login.bru` - Test invalid credentials
 
 **Default Credentials:**
+
 - Doctor: `admin` / `admin123`
 - Nurse: `nurse` / `admin123`
 - Parent: `parent` / `admin123`
 
+**Response Structure (AuthResponse):**
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "tokenType": "Bearer",
+  "userId": 1,
+  "username": "admin",
+  "email": "admin@example.com",
+  "role": "DOCTOR",
+  "firstName": "Admin",
+  "lastName": "User"
+}
+```
+
 **Key Learning Points:**
+
 - JWT authentication flow
 - Token storage in environment variables
 - Password validation rules
 - Role-based user creation
+- Flat response structure (role is at root level, not nested)
 
 ### 2. Vaccines (`vaccines/`)
 
 Tests for vaccine catalog management.
 
 **Tests:**
+
 - `get-all-vaccines.bru` - Retrieve all active vaccines
 - `get-vaccine-by-id.bru` - Get specific vaccine details
 - `get-vaccine-by-name.bru` - Search vaccine by name
@@ -94,6 +115,7 @@ Tests for vaccine catalog management.
 - `unauthorized-access.bru` - Test authentication requirement
 
 **Key Learning Points:**
+
 - RESTful GET operations
 - Query parameters
 - Path parameters
@@ -104,6 +126,7 @@ Tests for vaccine catalog management.
 Tests for child/infant management with CRUD operations.
 
 **Tests:**
+
 - `create-child.bru` - Create new child (Doctor)
 - `create-child-by-nurse.bru` - Create child (Nurse)
 - `create-child-forbidden-parent.bru` - Test role restriction
@@ -115,6 +138,7 @@ Tests for child/infant management with CRUD operations.
 - `get-my-children.bru` - Get children for parent
 
 **Key Learning Points:**
+
 - Complete CRUD workflow
 - Role-based access control (RBAC)
 - Request body validation
@@ -126,6 +150,7 @@ Tests for child/infant management with CRUD operations.
 Tests for user management and medical staff queries.
 
 **Tests:**
+
 - `get-all-users.bru` - Get all users (Doctor only)
 - `get-all-doctors.bru` - List active doctors
 - `get-all-nurses.bru` - List active nurses
@@ -133,6 +158,7 @@ Tests for user management and medical staff queries.
 - `get-users-by-role-forbidden.bru` - Test permission denied
 
 **Key Learning Points:**
+
 - Role-based endpoint access
 - Filtering by user role
 - 403 Forbidden responses
@@ -142,6 +168,7 @@ Tests for user management and medical staff queries.
 Tests for appointment scheduling and lifecycle.
 
 **Tests:**
+
 - `create-appointment.bru` - Schedule new appointment
 - `get-all-appointments.bru` - List appointments
 - `get-child-appointments.bru` - Appointments for specific child
@@ -152,6 +179,7 @@ Tests for appointment scheduling and lifecycle.
 - `cancel-appointment.bru` - Cancel appointment
 
 **Key Learning Points:**
+
 - State machine workflow (SCHEDULED → CONFIRMED → COMPLETED)
 - DateTime formatting (ISO 8601)
 - Query parameters for filtering
@@ -162,6 +190,7 @@ Tests for appointment scheduling and lifecycle.
 Tests for vaccination record management.
 
 **Tests:**
+
 - `create-vaccination-record.bru` - Record vaccine administration
 - `get-child-vaccination-history.bru` - Complete vaccination history
 - `get-vaccination-by-id.bru` - Get specific record
@@ -169,6 +198,7 @@ Tests for vaccination record management.
 - `create-vaccination-forbidden-parent.bru` - Test role restriction
 
 **Key Learning Points:**
+
 - Medical record creation
 - Batch number tracking
 - Expiration date validation
@@ -180,11 +210,13 @@ Tests for vaccination record management.
 Tests for vaccination schedule queries.
 
 **Tests:**
+
 - `get-paraguay-schedule.bru` - Complete PAI schedule
 - `get-mandatory-schedules.bru` - Mandatory vaccines by age
 - `get-all-schedules.bru` - All vaccination schedules
 
 **Key Learning Points:**
+
 - Paraguay PAI (Programa Ampliado de Inmunizaciones) schedule
 - Age-based vaccine recommendations
 - Mandatory vs. optional vaccines
@@ -194,6 +226,7 @@ Tests for vaccination schedule queries.
 Tests for vaccine inventory management.
 
 **Tests:**
+
 - `add-inventory.bru` - Add new vaccine batch
 - `get-all-inventory.bru` - List all inventory
 - `get-expiring-soon.bru` - Vaccines expiring soon
@@ -202,6 +235,7 @@ Tests for vaccine inventory management.
 - `forbidden-for-parent.bru` - Test medical staff-only access
 
 **Key Learning Points:**
+
 - Inventory tracking
 - FIFO (First In, First Out) logic
 - Stock alerts
@@ -213,18 +247,21 @@ Tests for vaccine inventory management.
 The JavaVacunas system implements three user roles with different permissions:
 
 ### DOCTOR
+
 - Full system access
 - Can create, update, and delete all records
 - Manage users, children, appointments, vaccinations, and inventory
 - Access all reports and analytics
 
 ### NURSE
+
 - Read/write access to operational data
 - Create and manage children, appointments, and vaccinations
 - Manage inventory
 - Cannot delete records or manage users
 
 ### PARENT
+
 - Read-only access to own children's data
 - View vaccination history and schedules
 - Schedule and confirm appointments for own children
@@ -235,6 +272,7 @@ The JavaVacunas system implements three user roles with different permissions:
 The collection uses environment variables to store dynamic values:
 
 **Automatically Set:**
+
 - `doctorToken` - JWT token for DOCTOR role (set by login-doctor.bru)
 - `nurseToken` - JWT token for NURSE role (set by login-nurse.bru)
 - `parentToken` - JWT token for PARENT role (set by login-parent.bru)
@@ -244,6 +282,7 @@ The collection uses environment variables to store dynamic values:
 - `testInventoryId` - ID of inventory item (set by add-inventory.bru)
 
 **Manually Configured:**
+
 - `baseUrl` - API base URL (default: `http://localhost:8080/api/v1`)
 
 ## Running Tests
@@ -368,17 +407,29 @@ Run tests from command line:
 # Install Bruno CLI
 npm install -g @usebruno/cli
 
-# Run entire collection
-bru run api-tests --env local
+# Navigate to collection directory
+cd api-tests
 
-# Run specific folder
-bru run api-tests/auth --env local
+# Run authentication tests (recommended first!)
+bru run auth --env local
 
-# Run with output
-bru run api-tests --env local --output results.json
+# Run specific test category
+bru run vaccines --env local
+
+# Run with JSON output
+bru run auth --env local --output results.json
 ```
 
-## Documentation References
+**Important CLI Note:** Bruno CLI has different behavior than the GUI regarding environment variables and token persistence. **See [BRUNO_CLI_GUIDE.md](./BRUNO_CLI_GUIDE.md) for complete CLI documentation, limitations, and best practices.**
+
+## Additional Documentation
+
+- **API_RESPONSE_REFERENCE.md** - Complete API response structure reference
+- **CHANGELOG.md** - Version history and bug fixes
+- **TEACHER_GUIDE.md** - Lesson plans and educational resources
+- **SUMMARY.md** - Quick reference and statistics
+
+## External Documentation
 
 - Bruno Documentation: https://docs.usebruno.com/
 - JavaVacunas API Docs: http://localhost:8080/swagger-ui.html (when running)
