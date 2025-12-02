@@ -215,9 +215,19 @@ Entity Layer (Domain models, @Entity)
 - Pattern: Given-When-Then with `@Nested` and `@DisplayName`
 
 **Integration Tests (`*IT.java`):**
-- Currently **DISABLED** due to TestContainers incompatibility (see pom.xml line 210)
-- Would extend `BaseIT` (TestContainers with Oracle 23c XE)
-- Test repository layer with real database
+- Extend `AbstractOracleIntegrationTest` (TestContainers 2.0+ with Oracle 23c Free)
+- Test repository layer with real Oracle database
+- Use `@ServiceConnection` annotation (Spring Boot 3.2+) for automatic DataSource configuration
+- Container reuse enabled for improved test performance (requires `testcontainers.reuse.enable=true`)
+- Database cleanup after each test via `@AfterEach` for test isolation
+- Docker image: `gvenzl/oracle-free:23.3-slim-faststart` (30-60 second startup)
+- **Completed integration tests:**
+  - `UserRepositoryIT` - User entity and authentication queries
+  - `VaccineRepositoryIT` - Vaccine CRUD and active vaccines
+  - `ChildRepositoryIT` - Child entity with soft delete and guardian relationships
+  - `GuardianRepositoryIT` - Guardian entity with many-to-many child relationships
+  - `VaccinationRecordRepositoryIT` - Vaccination records with child/vaccine relationships
+  - `AppointmentRepositoryIT` - Appointments with complex joins through guardians
 
 **Coverage requirements:**
 - Line coverage: ≥ 90%
@@ -300,9 +310,9 @@ Environment variables:
 ### Common Pitfalls
 
 1. **Flyway migrations**: Never modify existing migrations - create new ones
-2. **Integration tests**: Currently disabled, don't try to run them
+2. **Integration tests**: Now enabled with TestContainers 2.0+, requires Docker 29.x API and `testcontainers.reuse.enable=true` in `~/.testcontainers.properties`
 3. **Annotation processing**: IDE must enable annotation processors for Lombok/MapStruct
-4. **Oracle startup**: First container launch takes 3-5 minutes
+4. **Oracle startup**: First container launch takes 3-5 minutes, subsequent runs 30-60 seconds with reuse
 5. **Environment files**: Use `.env.docker` for compose, `.env` for local dev
 6. **Test isolation**: Unit tests use H2, not Oracle - be aware of dialect differences
 7. **FIFO inventory**: PL/SQL procedures handle vaccine inventory with FIFO selection
