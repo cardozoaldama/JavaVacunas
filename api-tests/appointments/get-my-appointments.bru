@@ -1,0 +1,26 @@
+meta {
+  name: Get My Appointments - Parent
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/appointments/my-appointments
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{parentToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of appointments", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+}

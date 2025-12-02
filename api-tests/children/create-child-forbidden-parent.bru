@@ -1,0 +1,39 @@
+meta {
+  name: Create Child - Forbidden for Parent
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/children
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{parentToken}}
+}
+
+body:json {
+  {
+    "firstName": "Pedro",
+    "lastName": "Lopez",
+    "documentNumber": "9876543",
+    "dateOfBirth": "2024-03-10",
+    "gender": "MALE",
+    "bloodType": "B+",
+    "birthWeight": 3.8,
+    "birthHeight": 51.0
+  }
+}
+
+tests {
+  test("should return 403 status", function() {
+    expect(res.getStatus()).to.equal(403);
+  });
+
+  test("should return error message", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("message");
+  });
+}

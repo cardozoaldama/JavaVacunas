@@ -1,0 +1,40 @@
+meta {
+  name: Register New Nurse
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "nurse.maria",
+    "password": "Nurse123!",
+    "firstName": "Maria",
+    "lastName": "Gonzalez",
+    "email": "maria.gonzalez@mspbs.gov.py",
+    "role": "NURSE",
+    "licenseNumber": "NUR-2024-001"
+  }
+}
+
+tests {
+  test("should return 201 status", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+
+  test("should return token", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("token");
+  });
+
+  test("should return user with NURSE role", function() {
+    const data = res.getBody();
+    expect(data.user.role).to.equal("NURSE");
+    expect(data.user.firstName).to.equal("Maria");
+  });
+}

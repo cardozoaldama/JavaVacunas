@@ -1,0 +1,33 @@
+meta {
+  name: Get All Active Doctors
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/users/doctors
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{nurseToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of doctors", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+
+  test("all users should be doctors", function() {
+    const data = res.getBody();
+    data.forEach(user => {
+      expect(user.role).to.equal("DOCTOR");
+    });
+  });
+}

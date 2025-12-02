@@ -1,0 +1,26 @@
+meta {
+  name: Complete Appointment
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/appointments/{{testAppointmentId}}/complete
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{nurseToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should have COMPLETED status", function() {
+    const data = res.getBody();
+    expect(data.status).to.equal("COMPLETED");
+  });
+}

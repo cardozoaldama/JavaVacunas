@@ -1,0 +1,29 @@
+meta {
+  name: Invalid Login - Wrong Password
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "admin",
+    "password": "wrongpassword"
+  }
+}
+
+tests {
+  test("should return 401 status", function() {
+    expect(res.getStatus()).to.equal(401);
+  });
+
+  test("should return error message", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("message");
+  });
+}

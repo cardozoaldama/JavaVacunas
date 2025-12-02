@@ -1,0 +1,35 @@
+meta {
+  name: Get All Users - Doctor Only
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{doctorToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of users", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+
+  test("users should have required properties", function() {
+    const data = res.getBody();
+    if (data.length > 0) {
+      expect(data[0]).to.have.property("id");
+      expect(data[0]).to.have.property("username");
+      expect(data[0]).to.have.property("role");
+    }
+  });
+}

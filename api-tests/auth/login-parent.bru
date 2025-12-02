@@ -1,0 +1,42 @@
+meta {
+  name: Login as Parent
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "parent",
+    "password": "admin123"
+  }
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return token", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("token");
+    expect(data.token).to.be.a("string");
+  });
+
+  test("should return user with PARENT role", function() {
+    const data = res.getBody();
+    expect(data.user.role).to.equal("PARENT");
+  });
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    const data = res.getBody();
+    bru.setEnvVar("parentToken", data.token);
+  }
+}

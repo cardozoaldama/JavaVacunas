@@ -1,0 +1,33 @@
+meta {
+  name: Get Paraguay Vaccination Schedule
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/schedules/paraguay
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{doctorToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of schedules", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+
+  test("schedules should be for Paraguay", function() {
+    const data = res.getBody();
+    if (data.length > 0) {
+      expect(data[0].countryCode).to.equal("PY");
+    }
+  });
+}

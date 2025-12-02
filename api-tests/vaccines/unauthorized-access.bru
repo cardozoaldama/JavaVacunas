@@ -1,0 +1,22 @@
+meta {
+  name: Unauthorized Access - No Token
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/vaccines
+  body: none
+  auth: none
+}
+
+tests {
+  test("should return 401 status", function() {
+    expect(res.getStatus()).to.equal(401);
+  });
+
+  test("should return error message", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("message");
+  });
+}

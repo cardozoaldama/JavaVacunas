@@ -1,0 +1,26 @@
+meta {
+  name: Get Upcoming Appointments
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/appointments/upcoming
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{doctorToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of appointments", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+}

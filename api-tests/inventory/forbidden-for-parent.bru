@@ -1,0 +1,21 @@
+meta {
+  name: Get Inventory - Forbidden for Parent
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/inventory
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{parentToken}}
+}
+
+tests {
+  test("should return 403 status", function() {
+    expect(res.getStatus()).to.equal(403);
+  });
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Get Vaccine by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/vaccines/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{doctorToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return vaccine object", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("object");
+    expect(data).to.have.property("id");
+    expect(data.id).to.equal(1);
+  });
+}

@@ -1,0 +1,42 @@
+meta {
+  name: Login as Doctor
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "admin",
+    "password": "admin123"
+  }
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return token", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("token");
+    expect(data.token).to.be.a("string");
+  });
+
+  test("should return user with DOCTOR role", function() {
+    const data = res.getBody();
+    expect(data.user.role).to.equal("DOCTOR");
+  });
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    const data = res.getBody();
+    bru.setEnvVar("doctorToken", data.token);
+  }
+}

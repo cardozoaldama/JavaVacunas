@@ -1,0 +1,21 @@
+meta {
+  name: Get All Users - Forbidden for Nurse
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{nurseToken}}
+}
+
+tests {
+  test("should return 403 status", function() {
+    expect(res.getStatus()).to.equal(403);
+  });
+}

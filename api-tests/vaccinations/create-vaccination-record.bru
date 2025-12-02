@@ -1,0 +1,48 @@
+meta {
+  name: Create Vaccination Record
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/vaccinations
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{nurseToken}}
+}
+
+body:json {
+  {
+    "childId": 1,
+    "vaccineId": 1,
+    "doseNumber": 1,
+    "administrationDate": "2024-12-01",
+    "batchNumber": "BCG-2024-001",
+    "expirationDate": "2025-12-01",
+    "administrationSite": "Brazo izquierdo",
+    "notes": "Vacuna administrada sin complicaciones",
+    "nextDoseDate": "2025-02-01"
+  }
+}
+
+tests {
+  test("should return 201 status", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+
+  test("should return created vaccination record", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("id");
+    expect(data.doseNumber).to.equal(1);
+  });
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    const data = res.getBody();
+    bru.setEnvVar("testVaccinationId", data.id);
+  }
+}

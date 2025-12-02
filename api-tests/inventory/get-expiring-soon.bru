@@ -1,0 +1,26 @@
+meta {
+  name: Get Expiring Soon Inventory
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/inventory/expiring-soon
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{doctorToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of inventory", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+}

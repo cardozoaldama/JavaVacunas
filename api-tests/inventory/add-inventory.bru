@@ -1,0 +1,35 @@
+meta {
+  name: Add Vaccine Inventory
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/inventory?vaccineId=1&batchNumber=BCG-2024-BATCH-001&quantity=500&manufactureDate=2024-01-15&expirationDate=2025-12-31&storageLocation=Refrigerador A1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{doctorToken}}
+}
+
+tests {
+  test("should return 201 status", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+
+  test("should return created inventory", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("id");
+    expect(data.quantity).to.equal(500);
+    expect(data.batchNumber).to.equal("BCG-2024-BATCH-001");
+  });
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    const data = res.getBody();
+    bru.setEnvVar("testInventoryId", data.id);
+  }
+}

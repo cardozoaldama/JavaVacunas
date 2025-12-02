@@ -1,0 +1,27 @@
+meta {
+  name: Get Vaccination Record by ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/vaccinations/{{testVaccinationId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{doctorToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return vaccination record", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("object");
+    expect(data).to.have.property("id");
+  });
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Search Vaccines by Disease
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/vaccines/search?disease=Sarampion
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{nurseToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of vaccines", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+
+  test("vaccines should prevent the searched disease", function() {
+    const data = res.getBody();
+    if (data.length > 0) {
+      expect(data[0].diseasePrevented).to.include("Sarampion");
+    }
+  });
+}

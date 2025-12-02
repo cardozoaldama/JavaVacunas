@@ -1,0 +1,40 @@
+meta {
+  name: Update Child Information
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/children/{{testChildId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{doctorToken}}
+}
+
+body:json {
+  {
+    "firstName": "Juan Carlos",
+    "lastName": "Perez Gonzalez",
+    "documentNumber": "1234567",
+    "dateOfBirth": "2024-01-15",
+    "gender": "MALE",
+    "bloodType": "O+",
+    "birthWeight": 3.5,
+    "birthHeight": 50.5
+  }
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return updated child", function() {
+    const data = res.getBody();
+    expect(data.firstName).to.equal("Juan Carlos");
+    expect(data.lastName).to.equal("Perez Gonzalez");
+  });
+}

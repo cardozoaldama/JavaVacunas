@@ -1,0 +1,42 @@
+meta {
+  name: Login as Nurse
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "nurse",
+    "password": "admin123"
+  }
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return token", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("token");
+    expect(data.token).to.be.a("string");
+  });
+
+  test("should return user with NURSE role", function() {
+    const data = res.getBody();
+    expect(data.user.role).to.equal("NURSE");
+  });
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    const data = res.getBody();
+    bru.setEnvVar("nurseToken", data.token);
+  }
+}

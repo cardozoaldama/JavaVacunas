@@ -1,0 +1,33 @@
+meta {
+  name: Get All Medical Staff
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/users/medical-staff
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{parentToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of medical staff", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+
+  test("all users should be doctors or nurses", function() {
+    const data = res.getBody();
+    data.forEach(user => {
+      expect(user.role).to.be.oneOf(["DOCTOR", "NURSE"]);
+    });
+  });
+}

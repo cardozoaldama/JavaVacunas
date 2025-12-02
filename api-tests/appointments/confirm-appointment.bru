@@ -1,0 +1,26 @@
+meta {
+  name: Confirm Appointment
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/appointments/{{testAppointmentId}}/confirm
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{parentToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should have CONFIRMED status", function() {
+    const data = res.getBody();
+    expect(data.status).to.equal("CONFIRMED");
+  });
+}

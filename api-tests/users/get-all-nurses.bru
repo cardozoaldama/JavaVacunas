@@ -1,0 +1,33 @@
+meta {
+  name: Get All Active Nurses
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/users/nurses
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{doctorToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of nurses", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+
+  test("all users should be nurses", function() {
+    const data = res.getBody();
+    data.forEach(user => {
+      expect(user.role).to.equal("NURSE");
+    });
+  });
+}

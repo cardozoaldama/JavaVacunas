@@ -1,0 +1,39 @@
+meta {
+  name: Register New Parent
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "parent.carlos",
+    "password": "Parent123!",
+    "firstName": "Carlos",
+    "lastName": "Benitez",
+    "email": "carlos.benitez@example.com",
+    "role": "PARENT"
+  }
+}
+
+tests {
+  test("should return 201 status", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+
+  test("should return token", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("token");
+  });
+
+  test("should return user with PARENT role", function() {
+    const data = res.getBody();
+    expect(data.user.role).to.equal("PARENT");
+    expect(data.user.firstName).to.equal("Carlos");
+  });
+}

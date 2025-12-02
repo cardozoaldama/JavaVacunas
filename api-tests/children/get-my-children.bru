@@ -1,0 +1,26 @@
+meta {
+  name: Get My Children - Parent
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/children/my-children
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{parentToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of children", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+}

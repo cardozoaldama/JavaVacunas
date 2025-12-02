@@ -1,0 +1,33 @@
+meta {
+  name: Get Mandatory Schedules by Age
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/schedules/mandatory?ageInMonths=6
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{nurseToken}}
+}
+
+tests {
+  test("should return 200 status", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return array of schedules", function() {
+    const data = res.getBody();
+    expect(data).to.be.an("array");
+  });
+
+  test("all schedules should be mandatory", function() {
+    const data = res.getBody();
+    data.forEach(schedule => {
+      expect(schedule.isMandatory).to.equal(true);
+    });
+  });
+}

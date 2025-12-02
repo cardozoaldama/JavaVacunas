@@ -1,0 +1,40 @@
+meta {
+  name: Create Child by Nurse
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/children
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{nurseToken}}
+}
+
+body:json {
+  {
+    "firstName": "Sofia",
+    "lastName": "Martinez",
+    "documentNumber": "7654321",
+    "dateOfBirth": "2023-06-20",
+    "gender": "FEMALE",
+    "bloodType": "A+",
+    "birthWeight": 3.2,
+    "birthHeight": 48.0
+  }
+}
+
+tests {
+  test("should return 201 status", function() {
+    expect(res.getStatus()).to.equal(201);
+  });
+
+  test("should return created child", function() {
+    const data = res.getBody();
+    expect(data).to.have.property("id");
+    expect(data.firstName).to.equal("Sofia");
+  });
+}
