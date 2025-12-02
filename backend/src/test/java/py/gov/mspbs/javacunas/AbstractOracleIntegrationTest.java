@@ -76,6 +76,7 @@ public abstract class AbstractOracleIntegrationTest {
     @AfterEach
     void cleanUpDatabase() {
         // Clean up tables in reverse order of dependencies
+        // Note: audit_log table removed as it's not an entity (only exists with Flyway migrations)
         jdbcTemplate.execute("DELETE FROM vaccination_records");
         jdbcTemplate.execute("DELETE FROM appointments");
         jdbcTemplate.execute("DELETE FROM vaccine_inventory");
@@ -86,7 +87,6 @@ public abstract class AbstractOracleIntegrationTest {
         jdbcTemplate.execute("DELETE FROM vaccines");
         jdbcTemplate.execute("DELETE FROM notifications");
         jdbcTemplate.execute("DELETE FROM users");
-        jdbcTemplate.execute("DELETE FROM audit_log");
     }
 
     /**
