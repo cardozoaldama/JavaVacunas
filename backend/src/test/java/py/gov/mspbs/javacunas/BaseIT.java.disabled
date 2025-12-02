@@ -10,6 +10,36 @@ import org.springframework.transaction.annotation.Transactional;
 import py.gov.mspbs.javacunas.config.TestContainersConfiguration;
 
 /**
+ * DEPRECATED: This class has been replaced by AbstractOracleIntegrationTest.
+ *
+ * Migration from TestContainers 1.21.3 to 2.0.2 required significant changes:
+ *
+ * BREAKING CHANGES:
+ * 1. Configuration approach changed:
+ *    - Old: Manual TestContainersConfiguration class with @TestConfiguration
+ *    - New: @ServiceConnection annotation (Spring Boot 3.2+) for automatic setup
+ *
+ * 2. Oracle module changed:
+ *    - Old: org.testcontainers:oracle-xe (deprecated)
+ *    - New: org.testcontainers:oracle-free (supports Oracle 23c Free)
+ *
+ * 3. Container initialization:
+ *    - Old: OracleContainer extends GenericContainer
+ *    - New: OracleContainer with fluent API and reuse support
+ *
+ * 4. Docker API compatibility:
+ *    - Old: Docker API 1.32 (incompatible with Docker 29.x)
+ *    - New: Docker API 1.47 (fully compatible with Docker 29.x)
+ *
+ * MIGRATION STEPS:
+ * - Replace: extends BaseIT
+ * - With: extends AbstractOracleIntegrationTest
+ * - Remove: @Import(TestContainersConfiguration.class)
+ * - The new base class provides the same cleanup functionality
+ *
+ * See: AbstractOracleIntegrationTest for the new implementation
+ *
+ * Original class for reference:
  * Base class for integration tests.
  * Loads full Spring context with TestContainers Oracle database.
  * Slower than unit tests but tests real database interactions.
