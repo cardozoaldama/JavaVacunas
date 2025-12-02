@@ -262,6 +262,86 @@ class ServiceNameTest extends BaseUnitTest {
 }
 ```
 
+### API Testing (Bruno)
+
+**Location:** `api-tests/` directory contains comprehensive Bruno API test collection
+
+**Collection Statistics:**
+- **49 test files** covering all REST API endpoints
+- **8 test categories**: Authentication, Vaccines, Children, Users, Appointments, Vaccinations, Schedules, Inventory
+- **3 roles tested**: DOCTOR, NURSE, PARENT with role-based access control verification
+- **Complete CRUD workflows** with state management and transitions
+
+**Quick Start:**
+```bash
+# Install Bruno (one-time)
+# Download from: https://www.usebruno.com/
+# Or: npm install -g @usebruno/cli
+
+# Start the backend
+docker compose --env-file .env.docker up -d
+
+# Open collection in Bruno
+# File > Open Collection > Select api-tests/
+
+# Select environment (local or docker)
+
+# Run authentication tests first
+# This automatically saves JWT tokens to environment variables
+```
+
+**Key Features:**
+- **Automatic Token Management**: Login tests save JWT tokens (doctorToken, nurseToken, parentToken)
+- **Dynamic ID Capture**: Test entities automatically save IDs for dependent tests
+- **Comprehensive Assertions**: Status codes, response structure, data types, business rules
+- **Role-Based Testing**: Success/forbidden scenarios for each role
+- **Educational Design**: Clear names, sequential execution, realistic data
+
+**Test Categories:**
+1. `auth/` - Login and registration (6 tests)
+2. `vaccines/` - Vaccine catalog operations (5 tests)
+3. `children/` - Child management CRUD (9 tests)
+4. `users/` - User management queries (5 tests)
+5. `appointments/` - Appointment lifecycle (8 tests)
+6. `vaccinations/` - Vaccination records (5 tests)
+7. `schedules/` - Paraguay PAI schedule (3 tests)
+8. `inventory/` - Vaccine inventory (6 tests)
+
+**Example Workflow - Complete Patient Journey:**
+```
+1. auth/login-doctor.bru
+2. children/create-child.bru (saves testChildId)
+3. schedules/get-paraguay-schedule.bru
+4. appointments/create-appointment.bru (saves testAppointmentId)
+5. auth/login-parent.bru
+6. appointments/confirm-appointment.bru
+7. auth/login-nurse.bru
+8. vaccinations/create-vaccination-record.bru
+9. vaccinations/get-child-vaccination-history.bru
+```
+
+**Documentation:**
+- `api-tests/README.md` - Complete collection overview and usage guide
+- `api-tests/TEACHER_GUIDE.md` - Lesson plans, demo scenarios, exercises for educators
+- `api-tests/SUMMARY.md` - Quick reference with statistics and test coverage matrix
+
+**Command Line Usage:**
+```bash
+# Run entire collection
+bru run api-tests --env local
+
+# Run specific folder
+bru run api-tests/auth --env local
+
+# Run with output
+bru run api-tests --env local --output results.json
+```
+
+**Educational Use:**
+- Students learn REST API fundamentals, HTTP methods, authentication
+- Teachers demonstrate CRUD operations, RBAC, state machines
+- Developers verify API functionality and test role permissions
+
 ## Important Development Notes
 
 ### Security & Authentication
