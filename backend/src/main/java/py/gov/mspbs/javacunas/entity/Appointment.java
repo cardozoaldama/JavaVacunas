@@ -37,6 +37,7 @@ public class Appointment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
+    @Builder.Default
     private AppointmentStatus status = AppointmentStatus.SCHEDULED;
 
     @Column(name = "scheduled_vaccines", length = 500)
