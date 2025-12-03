@@ -58,6 +58,64 @@ api-tests/
    - Tests are numbered for sequential execution
    - Each folder contains related API tests
 
+## Recent Improvements (December 2025)
+
+### ✅ All Hardcoded IDs Removed
+
+The test collection has been completely refactored to use **dynamic test data**:
+
+**What was fixed:**
+- ✅ **8 files** with hardcoded child IDs now use `{{testChildId}}`
+- ✅ **3 files** with hardcoded vaccine IDs now use `{{testVaccineId}}`
+- ✅ **Document numbers** are now timestamp-based (prevents duplicate conflicts)
+- ✅ **Appointment dates** are now dynamically calculated (30 days in future)
+- ✅ **Batch numbers** are now timestamp-based (prevents duplicate conflicts)
+
+**Benefits:**
+- ✨ **Portable:** Tests work on any machine/database without seed data
+- ✨ **No conflicts:** Can run tests multiple times without cleanup
+- ✨ **Isolated:** Each test run creates fresh test data
+- ✨ **Reliable:** No dependencies on hardcoded database IDs
+
+### New Test Runner Script
+
+Run all tests in the correct order with one command:
+
+```bash
+# Make script executable (one-time)
+chmod +x api-tests/run-all-tests.sh
+
+# Run all tests
+./api-tests/run-all-tests.sh
+
+# Or specify environment
+./api-tests/run-all-tests.sh docker
+```
+
+The script:
+- ✅ Checks if backend is running
+- ✅ Runs tests in correct dependency order
+- ✅ Stops on first failure
+- ✅ Shows colored output with pass/fail summary
+
+### Test Execution Order
+
+Tests must run in specific order due to dependencies. See **[TEST_EXECUTION_ORDER.md](./TEST_EXECUTION_ORDER.md)** for:
+- Complete dependency graph
+- Environment variable flow
+- Troubleshooting guide
+- CI/CD integration examples
+
+**Quick order:**
+1. `auth/` → Sets JWT tokens
+2. `vaccines/` → Captures `testVaccineId`
+3. `children/` → Captures `testChildId`
+4. `appointments/` → Uses `testChildId`
+5. `vaccinations/` → Uses `testChildId` + `testVaccineId`
+6. `inventory/` → Uses `testVaccineId`
+7. `schedules/` → No dependencies
+8. `users/` → No dependencies
+
 ## Test Categories
 
 ### 1. Authentication (`auth/`)
@@ -276,10 +334,17 @@ The collection uses environment variables to store dynamic values:
 - `doctorToken` - JWT token for DOCTOR role (set by login-doctor.bru)
 - `nurseToken` - JWT token for NURSE role (set by login-nurse.bru)
 - `parentToken` - JWT token for PARENT role (set by login-parent.bru)
+- `testVaccineId` - ID of first vaccine from database (set by get-all-vaccines.bru)
 - `testChildId` - ID of created test child (set by create-child.bru)
 - `testAppointmentId` - ID of created appointment (set by create-appointment.bru)
 - `testVaccinationId` - ID of vaccination record (set by create-vaccination-record.bru)
 - `testInventoryId` - ID of inventory item (set by add-inventory.bru)
+
+**Dynamically Generated (by pre-request scripts):**
+
+- `dynamicDocNumber` - Timestamp-based document number (prevents duplicates)
+- `dynamicBatchNumber` - Timestamp-based batch number (prevents duplicates)
+- `appointmentDateTime` - Future appointment date (30 days from now)
 
 **Manually Configured:**
 

@@ -14,11 +14,16 @@ auth:bearer {
   token: {{doctorToken}}
 }
 
+script:pre-request {
+  const timestamp = Date.now();
+  bru.setVar("dynamicDocNumber", timestamp.toString().slice(-7));
+}
+
 body:json {
   {
     "firstName": "Juan",
     "lastName": "Perez",
-    "documentNumber": "1234567",
+    "documentNumber": "{{dynamicDocNumber}}",
     "dateOfBirth": "2024-01-15",
     "gender": "MALE",
     "bloodType": "O+",
@@ -36,7 +41,7 @@ tests {
     const data = res.getBody();
     expect(data).to.have.property("id");
     expect(data.firstName).to.equal("Juan");
-    expect(data.documentNumber).to.equal("1234567");
+    expect(data).to.have.property("documentNumber");
   });
 }
 

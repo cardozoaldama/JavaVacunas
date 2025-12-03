@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/vaccines/1
+  url: {{baseUrl}}/vaccines/{{testVaccineId}}
   body: none
   auth: bearer
 }
@@ -23,6 +23,6 @@ tests {
     const data = res.getBody();
     expect(data).to.be.an("object");
     expect(data).to.have.property("id");
-    expect(data.id).to.equal(1);
+    expect(data.id).to.equal(parseInt(bru.getEnvVar("testVaccineId")));
   });
 }

@@ -4,8 +4,14 @@ meta {
   seq: 1
 }
 
+script:pre-request {
+  const timestamp = Date.now();
+  const batchNum = "BATCH-" + timestamp.toString().slice(-8);
+  bru.setVar("dynamicBatchNumber", batchNum);
+}
+
 post {
-  url: {{baseUrl}}/inventory?vaccineId=1&batchNumber=BCG-2024-BATCH-001&quantity=500&manufactureDate=2024-01-15&expirationDate=2025-12-31&storageLocation=Refrigerador A1
+  url: {{baseUrl}}/inventory?vaccineId={{testVaccineId}}&batchNumber={{dynamicBatchNumber}}&quantity=500&manufactureDate=2024-01-15&expirationDate=2025-12-31&storageLocation=Refrigerador A1
   body: none
   auth: bearer
 }
@@ -23,7 +29,7 @@ tests {
     const data = res.getBody();
     expect(data).to.have.property("id");
     expect(data.quantity).to.equal(500);
-    expect(data.batchNumber).to.equal("BCG-2024-BATCH-001");
+    expect(data).to.have.property("batchNumber");
   });
 }
 

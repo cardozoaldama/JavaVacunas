@@ -33,3 +33,12 @@ tests {
     }
   });
 }
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    const data = res.getBody();
+    if (data.length > 0) {
+      bru.setEnvVar("testVaccineId", data[0].id);
+    }
+  }
+}
