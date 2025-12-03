@@ -18,13 +18,19 @@ body:json {
   {
     "firstName": "Juan Carlos",
     "lastName": "Perez Gonzalez",
-    "documentNumber": "1234567",
+    "documentNumber": "{{documentNumber}}",
     "dateOfBirth": "2024-01-15",
     "gender": "MALE",
     "bloodType": "O+",
     "birthWeight": 3.5,
     "birthHeight": 50.5
   }
+}
+
+script:pre-request {
+  // Generate dynamic document number to avoid conflicts
+  const timestamp = Date.now().toString().slice(-7);
+  bru.setVar("documentNumber", timestamp);
 }
 
 tests {

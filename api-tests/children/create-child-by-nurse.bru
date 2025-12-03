@@ -18,13 +18,19 @@ body:json {
   {
     "firstName": "Sofia",
     "lastName": "Martinez",
-    "documentNumber": "7654321",
+    "documentNumber": "{{documentNumber}}",
     "dateOfBirth": "2023-06-20",
     "gender": "FEMALE",
     "bloodType": "A+",
     "birthWeight": 3.2,
     "birthHeight": 48.0
   }
+}
+
+script:pre-request {
+  // Generate dynamic document number to avoid conflicts
+  const timestamp = Date.now().toString().slice(-7);
+  bru.setVar("documentNumber", timestamp);
 }
 
 tests {
@@ -36,5 +42,6 @@ tests {
     const data = res.getBody();
     expect(data).to.have.property("id");
     expect(data.firstName).to.equal("Sofia");
+    expect(data.documentNumber).to.equal(bru.getVar("documentNumber"));
   });
 }

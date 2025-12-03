@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/appointments?childId=1&appointmentDate=2025-12-10T09:00:00&appointmentType=SCHEDULED&scheduledVaccines=BCG,Hepatitis B&notes=Primera visita
+  url: {{baseUrl}}/appointments?childId={{testChildId}}&appointmentDate=2025-12-10T09:00:00&appointmentType=SCHEDULED&scheduledVaccines=BCG,Hepatitis B&notes=Primera visita
   body: none
   auth: bearer
 }
