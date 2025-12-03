@@ -42,21 +42,42 @@ api-tests/
 
 ## Quick Start
 
-1. Open Bruno and import the collection
+### For Bruno GUI Users (Recommended for Development)
+
+1. **Open Bruno and import the collection**
    - File > Open Collection
    - Select the `api-tests` directory
 
-2. Select the environment
+2. **Select the environment**
    - Choose `local` for local development
    - Choose `docker` for Docker Compose setup
 
-3. Run the authentication tests first
-   - Execute tests in the `auth/` folder
-   - This will automatically save tokens to environment variables
+3. **Run tests in dependency order:**
+   - **Step 1:** Run `auth/` folder (sets JWT tokens)
+   - **Step 2:** Run `vaccines/get-all-vaccines.bru` (captures `testVaccineId`)
+   - **Step 3:** Run `children/create-child.bru` (captures `testChildId`)
+   - **Step 4:** Run other folders: appointments → vaccinations → inventory → schedules → users
 
-4. Explore other test categories
-   - Tests are numbered for sequential execution
-   - Each folder contains related API tests
+4. **Important:** See **[TEST_EXECUTION_ORDER.md](./TEST_EXECUTION_ORDER.md)** for detailed GUI workflow and troubleshooting
+
+### For Bruno CLI Users (Automation/CI/CD)
+
+Use the automated test runner script:
+
+```bash
+./api-tests/run-all-tests.sh
+```
+
+Or run folders individually:
+
+```bash
+bru run api-tests/auth --env local
+bru run api-tests/vaccines --env local
+bru run api-tests/children --env local
+# ... and so on
+```
+
+See **[TEST_EXECUTION_ORDER.md](./TEST_EXECUTION_ORDER.md)** for complete CLI documentation.
 
 ## Recent Improvements (December 2025)
 

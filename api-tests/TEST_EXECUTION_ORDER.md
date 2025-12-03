@@ -191,16 +191,37 @@ bru run api-tests --env local
 
 ## GUI Mode (Bruno Desktop)
 
-In Bruno Desktop GUI, tests work perfectly because:
-- Environment variables persist across folders
-- You can run tests in any order
-- Token state is maintained in the GUI environment
+In Bruno Desktop GUI, tests work reliably because:
+- Environment variables persist across folders (unlike CLI mode)
+- Token state is maintained throughout the session
+- You can see test results immediately with syntax highlighting
+- Pre-request and post-response scripts execute properly
 
 **Recommended workflow:**
-1. Open collection: File → Open Collection → Select `api-tests/`
-2. Select environment: `local` or `docker`
-3. Run `auth/` folder first to set tokens
-4. Run other folders in any order
+
+1. **Open collection:** File → Open Collection → Select `api-tests/`
+
+2. **Select environment:** Choose `local` or `docker`
+
+3. **Run tests in dependency order:**
+   - **FIRST:** Run entire `auth/` folder (or manually run the 3 login tests)
+     - This sets `doctorToken`, `nurseToken`, `parentToken`
+   - **SECOND:** Run `vaccines/get-all-vaccines.bru`
+     - This captures `testVaccineId` from your database
+   - **THIRD:** Run `children/create-child.bru`
+     - This creates a test child and captures `testChildId`
+   - **THEN:** Run other tests/folders as needed
+
+4. **For complete workflow testing:**
+   - Run folders in this order: auth → vaccines → children → appointments → vaccinations → inventory → schedules → users
+   - Or use "Run Folder" on each folder sequentially
+
+**GUI Advantages over CLI:**
+- ✅ Environment variables persist between folders
+- ✅ Visual feedback with formatted responses
+- ✅ Easy to re-run individual failed tests
+- ✅ Can inspect request/response details
+- ✅ No token persistence issues
 
 ## Troubleshooting
 
