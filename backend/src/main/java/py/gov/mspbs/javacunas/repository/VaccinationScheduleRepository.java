@@ -26,7 +26,11 @@ public interface VaccinationScheduleRepository extends JpaRepository<Vaccination
     /**
      * Find schedules by vaccine id.
      */
-    List<VaccinationSchedule> findByVaccineIdOrderByDoseNumber(Long vaccineId);
+    @Query("SELECT vs FROM VaccinationSchedule vs " +
+           "JOIN FETCH vs.vaccine v " +
+           "WHERE vs.vaccine.id = :vaccineId " +
+           "ORDER BY vs.doseNumber")
+    List<VaccinationSchedule> findByVaccineIdOrderByDoseNumber(@Param("vaccineId") Long vaccineId);
 
     /**
      * Find mandatory schedules for a specific age in months.
@@ -39,5 +43,13 @@ public interface VaccinationScheduleRepository extends JpaRepository<Vaccination
            "ORDER BY vs.recommendedAgeMonths, vs.doseNumber")
     List<VaccinationSchedule> findMandatorySchedulesUpToAge(@Param("countryCode") String countryCode,
                                                              @Param("ageMonths") Integer ageMonths);
+
+    /**
+     * Find all schedules with vaccine eagerly loaded.
+     */
+    @Query("SELECT vs FROM VaccinationSchedule vs " +
+           "JOIN FETCH vs.vaccine v " +
+           "ORDER BY vs.recommendedAgeMonths, vs.doseNumber")
+    List<VaccinationSchedule> findAllWithVaccine();
 
 }

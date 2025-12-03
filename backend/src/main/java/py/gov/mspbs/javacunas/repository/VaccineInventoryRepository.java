@@ -25,6 +25,8 @@ public interface VaccineInventoryRepository extends JpaRepository<VaccineInvento
      * Find available inventory for a vaccine.
      */
     @Query("SELECT vi FROM VaccineInventory vi " +
+           "JOIN FETCH vi.vaccine v " +
+           "JOIN FETCH vi.receivedBy u " +
            "WHERE vi.vaccine.id = :vaccineId " +
            "AND vi.status = 'AVAILABLE' " +
            "AND vi.quantity > 0 " +
@@ -35,6 +37,8 @@ public interface VaccineInventoryRepository extends JpaRepository<VaccineInvento
      * Find inventory expiring soon.
      */
     @Query("SELECT vi FROM VaccineInventory vi " +
+           "JOIN FETCH vi.vaccine v " +
+           "JOIN FETCH vi.receivedBy u " +
            "WHERE vi.expirationDate BETWEEN :today AND :endDate " +
            "AND vi.status = 'AVAILABLE' " +
            "AND vi.quantity > 0 " +
@@ -46,6 +50,8 @@ public interface VaccineInventoryRepository extends JpaRepository<VaccineInvento
      * Find low stock inventory.
      */
     @Query("SELECT vi FROM VaccineInventory vi " +
+           "JOIN FETCH vi.vaccine v " +
+           "JOIN FETCH vi.receivedBy u " +
            "WHERE vi.quantity < :threshold " +
            "AND vi.status = 'AVAILABLE' " +
            "ORDER BY vi.quantity")
@@ -70,5 +76,23 @@ public interface VaccineInventoryRepository extends JpaRepository<VaccineInvento
      */
     @Query(value = "SELECT fn_get_available_stock(:vaccineId) FROM DUAL", nativeQuery = true)
     Integer getAvailableStock(@Param("vaccineId") Long vaccineId);
+
+    /**
+     * Find all inventory with vaccine and user eagerly loaded.
+     */
+    @Query("SELECT vi FROM VaccineInventory vi " +
+           "JOIN FETCH vi.vaccine v " +
+           "JOIN FETCH vi.receivedBy u " +
+           "ORDER BY vi.expirationDate")
+    List<VaccineInventory> findAllWithRelations();
+
+    /**
+     * Find inventory by id with vaccine and user eagerly loaded.
+     */
+    @Query("SELECT vi FROM VaccineInventory vi " +
+           "JOIN FETCH vi.vaccine v " +
+           "JOIN FETCH vi.receivedBy u " +
+           "WHERE vi.id = :id")
+    Optional<VaccineInventory> findByIdWithRelations(@Param("id") Long id);
 
 }

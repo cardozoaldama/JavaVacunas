@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import py.gov.mspbs.javacunas.entity.VaccinationSchedule;
+import py.gov.mspbs.javacunas.dto.VaccinationScheduleDto;
 import py.gov.mspbs.javacunas.service.VaccinationScheduleService;
 
 import java.util.List;
@@ -28,8 +28,8 @@ public class VaccinationScheduleController {
      */
     @GetMapping("/paraguay")
     @Operation(summary = "Get Paraguay schedule", description = "Retrieve complete PAI vaccination schedule for Paraguay")
-    public ResponseEntity<List<VaccinationSchedule>> getParaguaySchedule() {
-        List<VaccinationSchedule> schedules = scheduleService.getParaguaySchedule();
+    public ResponseEntity<List<VaccinationScheduleDto>> getParaguaySchedule() {
+        List<VaccinationScheduleDto> schedules = scheduleService.getParaguaySchedule();
         return ResponseEntity.ok(schedules);
     }
 
@@ -38,8 +38,8 @@ public class VaccinationScheduleController {
      */
     @GetMapping("/vaccine/{vaccineId}")
     @Operation(summary = "Get schedule by vaccine", description = "Retrieve vaccination schedule for a specific vaccine")
-    public ResponseEntity<List<VaccinationSchedule>> getScheduleByVaccineId(@PathVariable Long vaccineId) {
-        List<VaccinationSchedule> schedules = scheduleService.getScheduleByVaccineId(vaccineId);
+    public ResponseEntity<List<VaccinationScheduleDto>> getScheduleByVaccineId(@PathVariable Long vaccineId) {
+        List<VaccinationScheduleDto> schedules = scheduleService.getScheduleByVaccineId(vaccineId);
         return ResponseEntity.ok(schedules);
     }
 
@@ -48,9 +48,9 @@ public class VaccinationScheduleController {
      */
     @GetMapping("/mandatory")
     @Operation(summary = "Get mandatory schedules", description = "Retrieve mandatory vaccination schedules up to specified age")
-    public ResponseEntity<List<VaccinationSchedule>> getMandatorySchedulesUpToAge(
+    public ResponseEntity<List<VaccinationScheduleDto>> getMandatorySchedulesUpToAge(
             @RequestParam Integer ageInMonths) {
-        List<VaccinationSchedule> schedules = scheduleService.getMandatorySchedulesUpToAge(ageInMonths);
+        List<VaccinationScheduleDto> schedules = scheduleService.getMandatorySchedulesUpToAge(ageInMonths);
         return ResponseEntity.ok(schedules);
     }
 
@@ -59,8 +59,8 @@ public class VaccinationScheduleController {
      */
     @GetMapping
     @Operation(summary = "Get all schedules", description = "Retrieve all vaccination schedules")
-    public ResponseEntity<List<VaccinationSchedule>> getAllSchedules() {
-        List<VaccinationSchedule> schedules = scheduleService.getAllSchedules();
+    public ResponseEntity<List<VaccinationScheduleDto>> getAllSchedules() {
+        List<VaccinationScheduleDto> schedules = scheduleService.getAllSchedules();
         return ResponseEntity.ok(schedules);
     }
 
