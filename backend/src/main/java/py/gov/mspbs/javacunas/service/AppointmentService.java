@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import py.gov.mspbs.javacunas.dto.AppointmentDto;
 import py.gov.mspbs.javacunas.entity.Appointment;
 import py.gov.mspbs.javacunas.entity.Child;
 import py.gov.mspbs.javacunas.entity.User;
@@ -15,6 +16,7 @@ import py.gov.mspbs.javacunas.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service for managing appointments.
@@ -29,10 +31,39 @@ public class AppointmentService {
     private final UserRepository userRepository;
 
     /**
+     * Convert Appointment entity to AppointmentDto.
+     */
+    private AppointmentDto toDto(Appointment appointment) {
+        if (appointment == null) {
+            return null;
+        }
+
+        return AppointmentDto.builder()
+                .id(appointment.getId())
+                .childId(appointment.getChild() != null ? appointment.getChild().getId() : null)
+                .childName(appointment.getChild() != null ?
+                    appointment.getChild().getFirstName() + " " + appointment.getChild().getLastName() : null)
+                .appointmentDate(appointment.getAppointmentDate())
+                .appointmentType(appointment.getAppointmentType())
+                .status(appointment.getStatus())
+                .scheduledVaccines(appointment.getScheduledVaccines())
+                .assignedToId(appointment.getAssignedTo() != null ? appointment.getAssignedTo().getId() : null)
+                .assignedToName(appointment.getAssignedTo() != null ?
+                    appointment.getAssignedTo().getFirstName() + " " + appointment.getAssignedTo().getLastName() : null)
+                .notes(appointment.getNotes())
+                .createdById(appointment.getCreatedBy() != null ? appointment.getCreatedBy().getId() : null)
+                .createdByName(appointment.getCreatedBy() != null ?
+                    appointment.getCreatedBy().getFirstName() + " " + appointment.getCreatedBy().getLastName() : null)
+                .createdAt(appointment.getCreatedAt())
+                .updatedAt(appointment.getUpdatedAt())
+                .build();
+    }
+
+    /**
      * Create a new appointment.
      */
     @Transactional
-    public Appointment createAppointment(Long childId, LocalDateTime appointmentDate,
+    public AppointmentDto createAppointment(Long childId, LocalDateTime appointmentDate,
                                         String appointmentType, String scheduledVaccines,
                                         Long assignedToId, String notes, Long createdById) {
         log.info("Creating appointment for child {} on {}", childId, appointmentDate);
@@ -75,24 +106,25 @@ public class AppointmentService {
         Appointment saved = appointmentRepository.save(appointment);
         log.info("Appointment created successfully with ID: {}", saved.getId());
 
-        return saved;
+        return toDto(saved);
     }
 
     /**
      * Get appointment by ID.
      */
     @Transactional(readOnly = true)
-    public Appointment getAppointmentById(Long id) {
+    public AppointmentDto getAppointmentById(Long id) {
         log.debug("Retrieving appointment with ID: {}", id);
-        return appointmentRepository.findById(id)
+        Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", "id", id));
+        return toDto(appointment);
     }
 
     /**
      * Get appointments by child ID.
      */
     @Transactional(readOnly = true)
-    public List<Appointment> getAppointmentsByChildId(Long childId) {
+    public List<AppointmentDto> getAppointmentsByChildId(Long childId) {
         log.debug("Retrieving appointments for child: {}", childId);
 
         // Verify child exists
@@ -103,68 +135,82 @@ public class AppointmentService {
             throw new ResourceNotFoundException("Child", "id", childId);
         }
 
-        return appointmentRepository.findByChildId(childId);
+        return appointmentRepository.findByChildId(childId).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Get all appointments.
      */
     @Transactional(readOnly = true)
-    public List<Appointment> getAllAppointments() {
+    public List<AppointmentDto> getAllAppointments() {
         log.debug("Retrieving all appointments");
-        return appointmentRepository.findAll();
+        return appointmentRepository.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Get appointments for a user's children (for PARENT role).
      */
     @Transactional(readOnly = true)
-    public List<Appointment> getAppointmentsByUserId(Long userId) {
+    public List<AppointmentDto> getAppointmentsByUserId(Long userId) {
         log.debug("Retrieving appointments for user: {}", userId);
-        return appointmentRepository.findByUserIdThroughChildren(userId);
+        return appointmentRepository.findByUserIdThroughChildren(userId).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Get appointments by status.
      */
     @Transactional(readOnly = true)
-    public List<Appointment> getAppointmentsByStatus(Appointment.AppointmentStatus status) {
+    public List<AppointmentDto> getAppointmentsByStatus(Appointment.AppointmentStatus status) {
         log.debug("Retrieving appointments with status: {}", status);
-        return appointmentRepository.findByStatusOrderByAppointmentDate(status);
+        return appointmentRepository.findByStatusOrderByAppointmentDate(status).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Get upcoming appointments.
      */
     @Transactional(readOnly = true)
-    public List<Appointment> getUpcomingAppointments() {
+    public List<AppointmentDto> getUpcomingAppointments() {
         log.debug("Retrieving upcoming appointments");
-        return appointmentRepository.findUpcomingAppointments(LocalDateTime.now());
+        return appointmentRepository.findUpcomingAppointments(LocalDateTime.now()).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Get appointments assigned to a user.
      */
     @Transactional(readOnly = true)
-    public List<Appointment> getAppointmentsAssignedToUser(Long userId) {
+    public List<AppointmentDto> getAppointmentsAssignedToUser(Long userId) {
         log.debug("Retrieving appointments assigned to user: {}", userId);
-        return appointmentRepository.findByAssignedToId(userId);
+        return appointmentRepository.findByAssignedToId(userId).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Get appointments created by a user.
      */
     @Transactional(readOnly = true)
-    public List<Appointment> getAppointmentsCreatedByUser(Long userId) {
+    public List<AppointmentDto> getAppointmentsCreatedByUser(Long userId) {
         log.debug("Retrieving appointments created by user: {}", userId);
-        return appointmentRepository.findByCreatedById(userId);
+        return appointmentRepository.findByCreatedById(userId).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Update appointment status.
      */
     @Transactional
-    public Appointment updateAppointmentStatus(Long id, Appointment.AppointmentStatus status) {
+    public AppointmentDto updateAppointmentStatus(Long id, Appointment.AppointmentStatus status) {
         log.info("Updating appointment {} status to {}", id, status);
 
         Appointment appointment = appointmentRepository.findById(id)
@@ -175,14 +221,14 @@ public class AppointmentService {
         Appointment updated = appointmentRepository.save(appointment);
         log.info("Appointment status updated successfully");
 
-        return updated;
+        return toDto(updated);
     }
 
     /**
      * Update appointment.
      */
     @Transactional
-    public Appointment updateAppointment(Long id, LocalDateTime appointmentDate,
+    public AppointmentDto updateAppointment(Long id, LocalDateTime appointmentDate,
                                         String appointmentType, String scheduledVaccines,
                                         Long assignedToId, String notes) {
         log.info("Updating appointment with ID: {}", id);
@@ -210,14 +256,14 @@ public class AppointmentService {
         Appointment updated = appointmentRepository.save(appointment);
         log.info("Appointment updated successfully");
 
-        return updated;
+        return toDto(updated);
     }
 
     /**
      * Cancel appointment.
      */
     @Transactional
-    public Appointment cancelAppointment(Long id) {
+    public AppointmentDto cancelAppointment(Long id) {
         log.info("Cancelling appointment with ID: {}", id);
         return updateAppointmentStatus(id, Appointment.AppointmentStatus.CANCELLED);
     }
@@ -226,7 +272,7 @@ public class AppointmentService {
      * Confirm appointment.
      */
     @Transactional
-    public Appointment confirmAppointment(Long id) {
+    public AppointmentDto confirmAppointment(Long id) {
         log.info("Confirming appointment with ID: {}", id);
         return updateAppointmentStatus(id, Appointment.AppointmentStatus.CONFIRMED);
     }
@@ -235,7 +281,7 @@ public class AppointmentService {
      * Complete appointment.
      */
     @Transactional
-    public Appointment completeAppointment(Long id) {
+    public AppointmentDto completeAppointment(Long id) {
         log.info("Completing appointment with ID: {}", id);
         return updateAppointmentStatus(id, Appointment.AppointmentStatus.COMPLETED);
     }

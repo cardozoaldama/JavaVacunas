@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import py.gov.mspbs.javacunas.dto.AppointmentDto;
 import py.gov.mspbs.javacunas.entity.Appointment;
 import py.gov.mspbs.javacunas.entity.User;
 import py.gov.mspbs.javacunas.security.UserPrincipal;
@@ -36,7 +37,7 @@ public class AppointmentController {
     @PostMapping
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Create appointment", description = "Create a new vaccination appointment")
-    public ResponseEntity<Appointment> createAppointment(
+    public ResponseEntity<AppointmentDto> createAppointment(
             @RequestParam Long childId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime appointmentDate,
             @RequestParam String appointmentType,
@@ -46,7 +47,7 @@ public class AppointmentController {
             Authentication authentication) {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        Appointment appointment = appointmentService.createAppointment(
+        AppointmentDto appointment = appointmentService.createAppointment(
                 childId, appointmentDate, appointmentType, scheduledVaccines,
                 assignedToId, notes, userPrincipal.getId());
 
@@ -59,8 +60,8 @@ public class AppointmentController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Get appointment", description = "Retrieve appointment by ID")
-    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
-        Appointment appointment = appointmentService.getAppointmentById(id);
+    public ResponseEntity<AppointmentDto> getAppointmentById(@PathVariable Long id) {
+        AppointmentDto appointment = appointmentService.getAppointmentById(id);
         return ResponseEntity.ok(appointment);
     }
 
@@ -70,8 +71,8 @@ public class AppointmentController {
     @GetMapping("/child/{childId}")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Get child appointments", description = "Retrieve all appointments for a child")
-    public ResponseEntity<List<Appointment>> getAppointmentsByChildId(@PathVariable Long childId) {
-        List<Appointment> appointments = appointmentService.getAppointmentsByChildId(childId);
+    public ResponseEntity<List<AppointmentDto>> getAppointmentsByChildId(@PathVariable Long childId) {
+        List<AppointmentDto> appointments = appointmentService.getAppointmentsByChildId(childId);
         return ResponseEntity.ok(appointments);
     }
 
@@ -81,8 +82,8 @@ public class AppointmentController {
     @GetMapping
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Get all appointments", description = "Retrieve all appointments")
-    public ResponseEntity<List<Appointment>> getAllAppointments() {
-        List<Appointment> appointments = appointmentService.getAllAppointments();
+    public ResponseEntity<List<AppointmentDto>> getAllAppointments() {
+        List<AppointmentDto> appointments = appointmentService.getAllAppointments();
         return ResponseEntity.ok(appointments);
     }
 
@@ -92,8 +93,8 @@ public class AppointmentController {
     @GetMapping("/upcoming")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Get upcoming appointments", description = "Retrieve all upcoming appointments")
-    public ResponseEntity<List<Appointment>> getUpcomingAppointments() {
-        List<Appointment> appointments = appointmentService.getUpcomingAppointments();
+    public ResponseEntity<List<AppointmentDto>> getUpcomingAppointments() {
+        List<AppointmentDto> appointments = appointmentService.getUpcomingAppointments();
         return ResponseEntity.ok(appointments);
     }
 
@@ -103,9 +104,9 @@ public class AppointmentController {
     @GetMapping("/status/{status}")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Get appointments by status", description = "Retrieve appointments by status")
-    public ResponseEntity<List<Appointment>> getAppointmentsByStatus(
+    public ResponseEntity<List<AppointmentDto>> getAppointmentsByStatus(
             @PathVariable Appointment.AppointmentStatus status) {
-        List<Appointment> appointments = appointmentService.getAppointmentsByStatus(status);
+        List<AppointmentDto> appointments = appointmentService.getAppointmentsByStatus(status);
         return ResponseEntity.ok(appointments);
     }
 
@@ -115,10 +116,10 @@ public class AppointmentController {
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Update appointment status", description = "Update the status of an appointment")
-    public ResponseEntity<Appointment> updateAppointmentStatus(
+    public ResponseEntity<AppointmentDto> updateAppointmentStatus(
             @PathVariable Long id,
             @RequestParam Appointment.AppointmentStatus status) {
-        Appointment appointment = appointmentService.updateAppointmentStatus(id, status);
+        AppointmentDto appointment = appointmentService.updateAppointmentStatus(id, status);
         return ResponseEntity.ok(appointment);
     }
 
@@ -128,8 +129,8 @@ public class AppointmentController {
     @PutMapping("/{id}/confirm")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Confirm appointment", description = "Confirm an appointment")
-    public ResponseEntity<Appointment> confirmAppointment(@PathVariable Long id) {
-        Appointment appointment = appointmentService.confirmAppointment(id);
+    public ResponseEntity<AppointmentDto> confirmAppointment(@PathVariable Long id) {
+        AppointmentDto appointment = appointmentService.confirmAppointment(id);
         return ResponseEntity.ok(appointment);
     }
 
@@ -139,8 +140,8 @@ public class AppointmentController {
     @PutMapping("/{id}/complete")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Complete appointment", description = "Mark appointment as completed")
-    public ResponseEntity<Appointment> completeAppointment(@PathVariable Long id) {
-        Appointment appointment = appointmentService.completeAppointment(id);
+    public ResponseEntity<AppointmentDto> completeAppointment(@PathVariable Long id) {
+        AppointmentDto appointment = appointmentService.completeAppointment(id);
         return ResponseEntity.ok(appointment);
     }
 
@@ -150,8 +151,8 @@ public class AppointmentController {
     @PutMapping("/{id}/cancel")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Cancel appointment", description = "Cancel an appointment")
-    public ResponseEntity<Appointment> cancelAppointment(@PathVariable Long id) {
-        Appointment appointment = appointmentService.cancelAppointment(id);
+    public ResponseEntity<AppointmentDto> cancelAppointment(@PathVariable Long id) {
+        AppointmentDto appointment = appointmentService.cancelAppointment(id);
         return ResponseEntity.ok(appointment);
     }
 
@@ -161,9 +162,9 @@ public class AppointmentController {
     @GetMapping("/my-appointments")
     @PreAuthorize("hasRole('PARENT')")
     @Operation(summary = "Get my appointments", description = "Retrieve appointments for the authenticated parent's children")
-    public ResponseEntity<List<Appointment>> getMyAppointments(Authentication authentication) {
+    public ResponseEntity<List<AppointmentDto>> getMyAppointments(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        List<Appointment> appointments = appointmentService.getAppointmentsByUserId(userPrincipal.getId());
+        List<AppointmentDto> appointments = appointmentService.getAppointmentsByUserId(userPrincipal.getId());
         return ResponseEntity.ok(appointments);
     }
 
@@ -173,9 +174,9 @@ public class AppointmentController {
     @GetMapping("/assigned-to-me")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @Operation(summary = "Get assigned appointments", description = "Retrieve appointments assigned to the authenticated medical staff")
-    public ResponseEntity<List<Appointment>> getAssignedAppointments(Authentication authentication) {
+    public ResponseEntity<List<AppointmentDto>> getAssignedAppointments(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        List<Appointment> appointments = appointmentService.getAppointmentsAssignedToUser(userPrincipal.getId());
+        List<AppointmentDto> appointments = appointmentService.getAppointmentsAssignedToUser(userPrincipal.getId());
         return ResponseEntity.ok(appointments);
     }
 
@@ -187,10 +188,10 @@ public class AppointmentController {
     @GetMapping("/role-based")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'PARENT')")
     @Operation(summary = "Get role-based appointments", description = "Retrieve appointments based on user role")
-    public ResponseEntity<List<Appointment>> getRoleBasedAppointments(Authentication authentication) {
+    public ResponseEntity<List<AppointmentDto>> getRoleBasedAppointments(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        List<Appointment> appointments;
+        List<AppointmentDto> appointments;
         if (userPrincipal.getRole() == User.UserRole.PARENT) {
             appointments = appointmentService.getAppointmentsByUserId(userPrincipal.getId());
         } else {
