@@ -39,7 +39,7 @@ public interface VaccinationScheduleRepository extends JpaRepository<Vaccination
            "JOIN FETCH vs.vaccine v " +
            "WHERE vs.countryCode = :countryCode " +
            "AND vs.recommendedAgeMonths <= :ageMonths " +
-           "AND vs.isMandatory = 'Y' " +
+           "AND vs.isMandatory = true " +
            "ORDER BY vs.recommendedAgeMonths, vs.doseNumber")
     List<VaccinationSchedule> findMandatorySchedulesUpToAge(@Param("countryCode") String countryCode,
                                                              @Param("ageMonths") Integer ageMonths);

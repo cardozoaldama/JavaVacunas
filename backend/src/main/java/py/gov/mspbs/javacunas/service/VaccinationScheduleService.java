@@ -81,7 +81,7 @@ public class VaccinationScheduleService {
                 .recommendedAgeMonths(schedule.getRecommendedAgeMonths())
                 .ageRangeStartMonths(schedule.getAgeRangeStartMonths())
                 .ageRangeEndMonths(schedule.getAgeRangeEndMonths())
-                .isMandatory(schedule.getIsMandatory() == 'Y')
+                .isMandatory(schedule.getIsMandatory())
                 .notes(schedule.getNotes())
                 .createdAt(schedule.getCreatedAt())
                 .build();
