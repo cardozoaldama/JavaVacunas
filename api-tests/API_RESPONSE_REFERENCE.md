@@ -70,7 +70,7 @@ Quick reference for JavaVacunas API response structures.
   "lastName": "Perez",
   "documentNumber": "1234567",
   "dateOfBirth": "2024-01-15",
-  "gender": "MALE",
+  "gender": "M",
   "bloodType": "O+",
   "birthWeight": 3.5,
   "birthHeight": 50.5,
@@ -78,6 +78,8 @@ Quick reference for JavaVacunas API response structures.
   "updatedAt": "2024-12-01T10:00:00"
 }
 ```
+
+**Note:** Valid gender values are: `"M"` (Male), `"F"` (Female), or `"O"` (Other)
 
 ## User Endpoints
 

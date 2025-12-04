@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import py.gov.mspbs.javacunas.dto.UserDto;
+import py.gov.mspbs.javacunas.dto.VaccineDto;
+import py.gov.mspbs.javacunas.dto.VaccineInventoryDto;
 import py.gov.mspbs.javacunas.entity.Vaccine;
 import py.gov.mspbs.javacunas.entity.VaccineInventory;
 import py.gov.mspbs.javacunas.entity.User;
@@ -16,6 +19,7 @@ import py.gov.mspbs.javacunas.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service for managing vaccine inventory.
@@ -36,7 +40,7 @@ public class VaccineInventoryService {
      * Add new vaccine inventory.
      */
     @Transactional
-    public VaccineInventory addInventory(Long vaccineId, String batchNumber, Integer quantity,
+    public VaccineInventoryDto addInventory(Long vaccineId, String batchNumber, Integer quantity,
                                         LocalDate manufactureDate, LocalDate expirationDate,
                                         String storageLocation, Long receivedByUserId) {
         log.info("Adding inventory for vaccine {} with batch {}", vaccineId, batchNumber);
@@ -77,46 +81,53 @@ public class VaccineInventoryService {
         VaccineInventory saved = inventoryRepository.save(inventory);
         log.info("Inventory added successfully with ID: {}", saved.getId());
 
-        return saved;
+        return mapToDto(saved);
     }
 
     /**
      * Get inventory by ID.
      */
     @Transactional(readOnly = true)
-    public VaccineInventory getInventoryById(Long id) {
+    public VaccineInventoryDto getInventoryById(Long id) {
         log.debug("Retrieving inventory with ID: {}", id);
-        return inventoryRepository.findById(id)
+        VaccineInventory inventory = inventoryRepository.findByIdWithRelations(id)
                 .orElseThrow(() -> new ResourceNotFoundException("VaccineInventory", "id", id));
+        return mapToDto(inventory);
     }
 
     /**
      * Get available inventory for a vaccine.
      */
     @Transactional(readOnly = true)
-    public List<VaccineInventory> getAvailableInventoryForVaccine(Long vaccineId) {
+    public List<VaccineInventoryDto> getAvailableInventoryForVaccine(Long vaccineId) {
         log.debug("Retrieving available inventory for vaccine: {}", vaccineId);
-        return inventoryRepository.findAvailableByVaccineId(vaccineId);
+        return inventoryRepository.findAvailableByVaccineId(vaccineId).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Get inventory expiring soon.
      */
     @Transactional(readOnly = true)
-    public List<VaccineInventory> getExpiringSoonInventory() {
+    public List<VaccineInventoryDto> getExpiringSoonInventory() {
         log.debug("Retrieving inventory expiring in next {} days", EXPIRATION_WARNING_DAYS);
         LocalDate today = LocalDate.now();
         LocalDate endDate = today.plusDays(EXPIRATION_WARNING_DAYS);
-        return inventoryRepository.findExpiringSoon(today, endDate);
+        return inventoryRepository.findExpiringSoon(today, endDate).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Get low stock inventory.
      */
     @Transactional(readOnly = true)
-    public List<VaccineInventory> getLowStockInventory() {
+    public List<VaccineInventoryDto> getLowStockInventory() {
         log.debug("Retrieving inventory with stock below {}", LOW_STOCK_THRESHOLD);
-        return inventoryRepository.findLowStock(LOW_STOCK_THRESHOLD);
+        return inventoryRepository.findLowStock(LOW_STOCK_THRESHOLD).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -132,10 +143,10 @@ public class VaccineInventoryService {
      * Update inventory quantity.
      */
     @Transactional
-    public VaccineInventory updateQuantity(Long inventoryId, Integer newQuantity) {
+    public VaccineInventoryDto updateQuantity(Long inventoryId, Integer newQuantity) {
         log.info("Updating inventory {} quantity to {}", inventoryId, newQuantity);
 
-        VaccineInventory inventory = inventoryRepository.findById(inventoryId)
+        VaccineInventory inventory = inventoryRepository.findByIdWithRelations(inventoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("VaccineInventory", "id", inventoryId));
 
         if (newQuantity < 0) {
@@ -152,17 +163,17 @@ public class VaccineInventoryService {
         VaccineInventory updated = inventoryRepository.save(inventory);
         log.info("Inventory quantity updated successfully");
 
-        return updated;
+        return mapToDto(updated);
     }
 
     /**
      * Update inventory status.
      */
     @Transactional
-    public VaccineInventory updateStatus(Long inventoryId, VaccineInventory.InventoryStatus status) {
+    public VaccineInventoryDto updateStatus(Long inventoryId, VaccineInventory.InventoryStatus status) {
         log.info("Updating inventory {} status to {}", inventoryId, status);
 
-        VaccineInventory inventory = inventoryRepository.findById(inventoryId)
+        VaccineInventory inventory = inventoryRepository.findByIdWithRelations(inventoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("VaccineInventory", "id", inventoryId));
 
         inventory.setStatus(status);
@@ -170,16 +181,78 @@ public class VaccineInventoryService {
         VaccineInventory updated = inventoryRepository.save(inventory);
         log.info("Inventory status updated successfully");
 
-        return updated;
+        return mapToDto(updated);
     }
 
     /**
      * Get all inventory.
      */
     @Transactional(readOnly = true)
-    public List<VaccineInventory> getAllInventory() {
+    public List<VaccineInventoryDto> getAllInventory() {
         log.debug("Retrieving all inventory");
-        return inventoryRepository.findAll();
+        return inventoryRepository.findAllWithRelations().stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Map VaccineInventory entity to DTO.
+     */
+    private VaccineInventoryDto mapToDto(VaccineInventory inventory) {
+        return VaccineInventoryDto.builder()
+                .id(inventory.getId())
+                .vaccine(mapVaccineToDto(inventory.getVaccine()))
+                .batchNumber(inventory.getBatchNumber())
+                .quantity(inventory.getQuantity())
+                .manufactureDate(inventory.getManufactureDate())
+                .expirationDate(inventory.getExpirationDate())
+                .storageLocation(inventory.getStorageLocation())
+                .status(inventory.getStatus())
+                .receivedDate(inventory.getReceivedDate())
+                .receivedBy(mapUserToDto(inventory.getReceivedBy()))
+                .notes(inventory.getNotes())
+                .createdAt(inventory.getCreatedAt())
+                .updatedAt(inventory.getUpdatedAt())
+                .build();
+    }
+
+    /**
+     * Map Vaccine entity to DTO.
+     */
+    private VaccineDto mapVaccineToDto(Vaccine vaccine) {
+        return VaccineDto.builder()
+                .id(vaccine.getId())
+                .name(vaccine.getName())
+                .description(vaccine.getDescription())
+                .manufacturer(vaccine.getManufacturer())
+                .diseasePrevented(vaccine.getDiseasePrevented())
+                .doseCount(vaccine.getDoseCount())
+                .minimumAgeMonths(vaccine.getMinimumAgeMonths())
+                .storageTemperatureMin(vaccine.getStorageTemperatureMin())
+                .storageTemperatureMax(vaccine.getStorageTemperatureMax())
+                .isActive(vaccine.getIsActive() == 'Y')
+                .createdAt(vaccine.getCreatedAt())
+                .updatedAt(vaccine.getUpdatedAt())
+                .build();
+    }
+
+    /**
+     * Map User entity to DTO.
+     */
+    private UserDto mapUserToDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .licenseNumber(user.getLicenseNumber())
+                .isActive(user.getIsActive())
+                .lastLogin(user.getLastLogin())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
     }
 
 }

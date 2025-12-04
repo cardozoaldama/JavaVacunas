@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import py.gov.mspbs.javacunas.dto.VaccineInventoryDto;
 import py.gov.mspbs.javacunas.entity.VaccineInventory;
 import py.gov.mspbs.javacunas.security.UserPrincipal;
 import py.gov.mspbs.javacunas.service.VaccineInventoryService;
@@ -35,7 +36,7 @@ public class VaccineInventoryController {
      */
     @PostMapping
     @Operation(summary = "Add inventory", description = "Add new vaccine batch to inventory")
-    public ResponseEntity<VaccineInventory> addInventory(
+    public ResponseEntity<VaccineInventoryDto> addInventory(
             @RequestParam Long vaccineId,
             @RequestParam String batchNumber,
             @RequestParam Integer quantity,
@@ -45,7 +46,7 @@ public class VaccineInventoryController {
             Authentication authentication) {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        VaccineInventory inventory = inventoryService.addInventory(
+        VaccineInventoryDto inventory = inventoryService.addInventory(
                 vaccineId, batchNumber, quantity, manufactureDate, expirationDate,
                 storageLocation, userPrincipal.getId());
 
@@ -57,8 +58,8 @@ public class VaccineInventoryController {
      */
     @GetMapping
     @Operation(summary = "Get all inventory", description = "Retrieve all vaccine inventory")
-    public ResponseEntity<List<VaccineInventory>> getAllInventory() {
-        List<VaccineInventory> inventory = inventoryService.getAllInventory();
+    public ResponseEntity<List<VaccineInventoryDto>> getAllInventory() {
+        List<VaccineInventoryDto> inventory = inventoryService.getAllInventory();
         return ResponseEntity.ok(inventory);
     }
 
@@ -67,8 +68,8 @@ public class VaccineInventoryController {
      */
     @GetMapping("/{id}")
     @Operation(summary = "Get inventory by ID", description = "Retrieve inventory record by ID")
-    public ResponseEntity<VaccineInventory> getInventoryById(@PathVariable Long id) {
-        VaccineInventory inventory = inventoryService.getInventoryById(id);
+    public ResponseEntity<VaccineInventoryDto> getInventoryById(@PathVariable Long id) {
+        VaccineInventoryDto inventory = inventoryService.getInventoryById(id);
         return ResponseEntity.ok(inventory);
     }
 
@@ -77,8 +78,8 @@ public class VaccineInventoryController {
      */
     @GetMapping("/vaccine/{vaccineId}")
     @Operation(summary = "Get available inventory", description = "Retrieve available inventory for a vaccine")
-    public ResponseEntity<List<VaccineInventory>> getAvailableInventoryForVaccine(@PathVariable Long vaccineId) {
-        List<VaccineInventory> inventory = inventoryService.getAvailableInventoryForVaccine(vaccineId);
+    public ResponseEntity<List<VaccineInventoryDto>> getAvailableInventoryForVaccine(@PathVariable Long vaccineId) {
+        List<VaccineInventoryDto> inventory = inventoryService.getAvailableInventoryForVaccine(vaccineId);
         return ResponseEntity.ok(inventory);
     }
 
@@ -87,8 +88,8 @@ public class VaccineInventoryController {
      */
     @GetMapping("/expiring-soon")
     @Operation(summary = "Get expiring inventory", description = "Retrieve inventory expiring soon")
-    public ResponseEntity<List<VaccineInventory>> getExpiringSoonInventory() {
-        List<VaccineInventory> inventory = inventoryService.getExpiringSoonInventory();
+    public ResponseEntity<List<VaccineInventoryDto>> getExpiringSoonInventory() {
+        List<VaccineInventoryDto> inventory = inventoryService.getExpiringSoonInventory();
         return ResponseEntity.ok(inventory);
     }
 
@@ -97,8 +98,8 @@ public class VaccineInventoryController {
      */
     @GetMapping("/low-stock")
     @Operation(summary = "Get low stock inventory", description = "Retrieve inventory with low stock")
-    public ResponseEntity<List<VaccineInventory>> getLowStockInventory() {
-        List<VaccineInventory> inventory = inventoryService.getLowStockInventory();
+    public ResponseEntity<List<VaccineInventoryDto>> getLowStockInventory() {
+        List<VaccineInventoryDto> inventory = inventoryService.getLowStockInventory();
         return ResponseEntity.ok(inventory);
     }
 
@@ -117,10 +118,10 @@ public class VaccineInventoryController {
      */
     @PutMapping("/{id}/quantity")
     @Operation(summary = "Update quantity", description = "Update inventory quantity")
-    public ResponseEntity<VaccineInventory> updateQuantity(
+    public ResponseEntity<VaccineInventoryDto> updateQuantity(
             @PathVariable Long id,
             @RequestParam Integer quantity) {
-        VaccineInventory inventory = inventoryService.updateQuantity(id, quantity);
+        VaccineInventoryDto inventory = inventoryService.updateQuantity(id, quantity);
         return ResponseEntity.ok(inventory);
     }
 
@@ -129,10 +130,10 @@ public class VaccineInventoryController {
      */
     @PutMapping("/{id}/status")
     @Operation(summary = "Update status", description = "Update inventory status")
-    public ResponseEntity<VaccineInventory> updateStatus(
+    public ResponseEntity<VaccineInventoryDto> updateStatus(
             @PathVariable Long id,
             @RequestParam VaccineInventory.InventoryStatus status) {
-        VaccineInventory inventory = inventoryService.updateStatus(id, status);
+        VaccineInventoryDto inventory = inventoryService.updateStatus(id, status);
         return ResponseEntity.ok(inventory);
     }
 

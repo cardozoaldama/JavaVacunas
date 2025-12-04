@@ -4,8 +4,15 @@ meta {
   seq: 1
 }
 
+script:pre-request {
+  const futureDate = new Date();
+  futureDate.setDate(futureDate.getDate() + 30);
+  const isoDate = futureDate.toISOString().slice(0, 19);
+  bru.setVar("appointmentDateTime", isoDate);
+}
+
 post {
-  url: {{baseUrl}}/appointments?childId=1&appointmentDate=2025-12-10T09:00:00&appointmentType=SCHEDULED&scheduledVaccines=BCG,Hepatitis B&notes=Primera visita
+  url: {{baseUrl}}/appointments?childId={{testChildId}}&appointmentDate={{appointmentDateTime}}&appointmentType=SCHEDULED&scheduledVaccines=BCG,Hepatitis B&notes=Primera visita
   body: none
   auth: bearer
 }

@@ -42,8 +42,8 @@ public class VaccinationSchedule {
     @Column(name = "age_range_end_months")
     private Integer ageRangeEndMonths;
 
-    @Column(name = "is_mandatory", nullable = false, length = 1)
-    private Character isMandatory = 'Y';
+    @Column(name = "is_mandatory", nullable = false)
+    private Boolean isMandatory = true;
 
     @Column(length = 500)
     private String notes;
