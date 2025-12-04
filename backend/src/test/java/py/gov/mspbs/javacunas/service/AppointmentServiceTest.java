@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import py.gov.mspbs.javacunas.BaseUnitTest;
+import py.gov.mspbs.javacunas.dto.AppointmentDto;
 import py.gov.mspbs.javacunas.entity.Appointment;
 import py.gov.mspbs.javacunas.entity.Child;
 import py.gov.mspbs.javacunas.entity.User;
@@ -86,7 +87,7 @@ class AppointmentServiceTest extends BaseUnitTest {
                     .thenReturn(Arrays.asList(appointment1, appointment2));
 
             // When
-            List<Appointment> result = appointmentService.getAppointmentsByUserId(1L);
+            List<AppointmentDto> result = appointmentService.getAppointmentsByUserId(1L);
 
             // Then
             assertThat(result).hasSize(2);
@@ -103,7 +104,7 @@ class AppointmentServiceTest extends BaseUnitTest {
                     .thenReturn(List.of());
 
             // When
-            List<Appointment> result = appointmentService.getAppointmentsByUserId(999L);
+            List<AppointmentDto> result = appointmentService.getAppointmentsByUserId(999L);
 
             // Then
             assertThat(result).isEmpty();
@@ -123,7 +124,7 @@ class AppointmentServiceTest extends BaseUnitTest {
                     .thenReturn(Arrays.asList(appointment1, appointment2));
 
             // When
-            List<Appointment> result = appointmentService.getAllAppointments();
+            List<AppointmentDto> result = appointmentService.getAllAppointments();
 
             // Then
             assertThat(result).hasSize(2);
