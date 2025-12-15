@@ -1,7 +1,9 @@
 # Ejercicio: Agenda Pediátrica - JavaVacunas
 
-**Autor:** JavaVacunas Team
+**Autor:** Ing. Fernando Cardozo
+
 **Fecha:** Diciembre 2025
+
 **Tecnologías:** React 18 + TypeScript + Vite + TanStack Query + Zustand
 
 ---
