@@ -1017,6 +1017,9 @@ JavaVacunas implementa completamente todos los requisitos del ejercicio de "Agen
 ---
 
 **Autor:** Ing. Fernando Cardozo
+
 **Licencia:** GNU General Public License v3.0
+
 **Fecha de creación:** Diciembre 2025
+
 **Última actualización:** Diciembre 2025
