@@ -185,7 +185,7 @@ export default function Appointments() {
                       <Calendar className="text-primary-600" size={20} />
                       <div>
                         <p className="font-semibold text-gray-900">
-                          {appointment.child.firstName} {appointment.child.lastName}
+                          {appointment.childName}
                         </p>
                         <p className="text-sm text-gray-500">
                           {format(new Date(appointment.appointmentDate), "dd 'de' MMMM 'de' yyyy 'a las' HH:mm", {

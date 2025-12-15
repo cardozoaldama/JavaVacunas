@@ -79,16 +79,19 @@ export interface VaccinationRecord {
 
 export interface Appointment {
   id: number;
-  child: {
-    id: number;
-    firstName: string;
-    lastName: string;
-  };
+  childId: number;
+  childName: string;
   appointmentDate: string;
   appointmentType: string;
   status: 'SCHEDULED' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
   scheduledVaccines?: string;
+  assignedToId?: number;
+  assignedToName?: string;
   notes?: string;
+  createdById?: number;
+  createdByName?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface VaccineInventory {
