@@ -153,13 +153,13 @@ jobs:
           fetch-depth: 0
 
       - name: Download backend artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: backend-jar
           path: ./artifacts/backend
 
       - name: Download frontend artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: frontend-dist
           path: ./artifacts/frontend
